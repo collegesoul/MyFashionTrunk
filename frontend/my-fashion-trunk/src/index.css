@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.navbar {
+    @apply flex justify-between items-center lg:px-24 px-10 py-3.5 border-2 shadow-md bg-white
+}
+
+.card {
+    @apply border-2 w-72 bg-white rounded-lg p-3 shadow-lg
+}
