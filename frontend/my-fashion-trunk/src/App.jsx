@@ -3,6 +3,7 @@ import Navigation from "./Components/Navigation.jsx";
 import Container from "./Components/Elements/Container.jsx";
 import MyListings from "./Components/MyListings.jsx";
 import Categories from "./Components/Categories.jsx";
+import Profile from "./Components/Profile.jsx";
 
 function App() {
     return(
@@ -13,6 +14,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<MyListings/>}/>
                         <Route path="/categories" element={<Categories/>}/>
+                        <Route path="/profile" element={<Profile/>}/>
                     </Routes>
                 </main>
             </Container>

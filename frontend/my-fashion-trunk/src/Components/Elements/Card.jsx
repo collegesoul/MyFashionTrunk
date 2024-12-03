@@ -1,11 +1,25 @@
-function Card() {
+import PropTypes from "prop-types";
 
-    let status = "Accepted"
-    let statusColour = "bg-green-600"
+function Card({status = "Accepted", title = "Title here"}) {
+
+    let statusColour;
+    switch (status) {
+        case "Accepted":
+            statusColour = "bg-green-600";
+            break;
+        case "Rejected":
+            statusColour = "bg-red-600";
+            break;
+        case "Pending":
+            statusColour = "bg-yellow-500";
+            break;
+        default:
+            statusColour = "bg-gray-500";
+    }
 
     return(
         <div className="card">
-            <h2>Title here</h2>
+            <h2>{title}</h2>
             <div className="bg-amber-700 w-auto h-44 my-4"></div>
             <div>
                 <span className={`${statusColour} h-3 w-3 mr-2 rounded-full inline-block`}></span>
@@ -13,6 +27,11 @@ function Card() {
             </div>
         </div>
     );
+}
+
+Card.propTypes = {
+    status: PropTypes.string,
+    title: PropTypes.string,
 }
 
 export default Card

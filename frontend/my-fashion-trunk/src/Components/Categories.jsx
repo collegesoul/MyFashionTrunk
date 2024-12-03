@@ -1,7 +1,7 @@
 function Categories() {
     return(
         <>
-            <p>Categories</p>
+            <h1 className="heading">Categories</h1>
         </>
     );
 }
