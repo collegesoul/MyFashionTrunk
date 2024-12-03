@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-function Card({status = "Accepted", title = "Title here"}) {
+function Card({title, status = "Accepted"}) {
 
     let statusColour;
     switch (status) {
@@ -19,7 +19,7 @@ function Card({status = "Accepted", title = "Title here"}) {
 
     return(
         <div className="card">
-            <h2>{title}</h2>
+            <h2>{(title === "")? "title here": title}</h2>
             <div className="bg-amber-700 w-auto h-44 my-4"></div>
             <div>
                 <span className={`${statusColour} h-3 w-3 mr-2 rounded-full inline-block`}></span>

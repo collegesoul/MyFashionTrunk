@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-unused-vars
+import React, {useRef} from "react";
 import Button from "./Elements/Button.jsx";
 
 function Upload() {
@@ -7,13 +9,22 @@ function Upload() {
         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12"/>
     </svg>
 
+    const formRef = useRef(null);
+
+    const closeForm = () =>{
+        formRef.current.style.display  = 'none';
+    }
+
     // TODO: Continue working on this component
 
     return (
-        <div className="modal p-3">
+        <div ref={formRef} className="modal p-3">
             <div className="flex justify-between">
                 <h1 className="text-gray-800 font-semibold text-xl">Add New Listing</h1>
-                <span>{closeIcon}</span>
+                <span onClick={closeForm}
+                    className="cursor-pointer hover:bg-red-400 hover:text-white">
+                    {closeIcon}
+                </span>
             </div>
             <hr className="my-3"/>
             <div>
@@ -25,7 +36,7 @@ function Upload() {
                     <div className="w-80 h-60 bg-gray-400 rounded my-6">
                         Drag image or Browse image from computer
                     </div>
-                    <div>
+                    <div className="text-center">
                         <Button text="Submit"/>
                     </div>
                 </form>
