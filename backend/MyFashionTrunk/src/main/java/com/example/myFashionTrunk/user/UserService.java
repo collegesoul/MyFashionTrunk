@@ -2,9 +2,13 @@ package com.example.myFashionTrunk.user;
 
 import com.example.myFashionTrunk.category.CategoryRepository;
 import com.example.myFashionTrunk.listing.ListingRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.security.sasl.AuthenticationException;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -31,18 +35,39 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public void authenticateUser(User user) {
+    public User authenticateUser(User user) throws AuthenticationException {
        User existingUser = userRepo.findByEmail(user.getEmail())
-               .orElseThrow(() -> new ValidationException("email address does not exist"));
+               .orElseThrow(() -> new EntityNotFoundException("email address does not exist"));
 
         String userPassword = existingUser.getPassword();
         if(checkPassword(user, userPassword)) {
-            throw new ValidationException("password does not match");
+            throw new AuthenticationException("password does not match");
         }
+        return existingUser;
     }
 
-    public void deleteUser(Integer id) {
-        //TODO: Delete Categories and Listings where Categories.user_id && Listings.user_id == user.id
+    public void updateUser(Integer userId, User user) {
+        User existingUser = userRepo.findById(userId).orElseThrow(() ->new EntityNotFoundException("user does not exist"));
+        if(!existingUser.getName().equals(user.getName())) {
+            existingUser.setName(user.getName());
+        }
+        if(!existingUser.getSurname().equals(user.getSurname())) {
+            existingUser.setSurname(user.getSurname());
+        }
+        if(!existingUser.getEmail().equals(user.getEmail())) {
+            existingUser.setEmail(user.getEmail());
+        }
+        if (!Objects.equals(user.getPassword(), "")) {
+            String hashedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(hashedPassword);
+        }
+        userRepo.save(existingUser);
+    }
+
+    public void deleteUser(Integer userId) {
+        listingRepo.deleteAllByUserId(userId);
+        CategoryRepo.deleteAllByUserId(userId);
+        userRepo.deleteById(userId);
     }
 
 

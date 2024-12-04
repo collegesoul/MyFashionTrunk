@@ -1,9 +1,8 @@
-package com.example.myFashionTrunk.services;
+package com.example.myFashionTrunk.service;
 
-import com.google.api.client.util.DateTime;
+import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Bucket;
-import com.google.cloud.storage.BucketInfo;
 import com.google.cloud.storage.Storage;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +32,12 @@ public class ImageStorageService {
         );
 
         return String.format("https://storage.googleapis.com/%s/%s", bucketName, filename);
+    }
+
+    public void deleteImage(String bucketName, String filename) {
+        BlobId blobId = BlobId.of(bucketName, filename);
+        storage.delete(blobId);
+
     }
 
 

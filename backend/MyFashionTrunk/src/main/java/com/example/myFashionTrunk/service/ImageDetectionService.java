@@ -1,10 +1,9 @@
-package com.example.myFashionTrunk.services;
+package com.example.myFashionTrunk.service;
 
 import com.example.myFashionTrunk.category.Category;
 import com.example.myFashionTrunk.category.CategoryRepository;
 import com.google.cloud.spring.vision.CloudVisionTemplate;
 import com.google.cloud.vision.v1.*;
-import com.google.protobuf.ByteString;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;

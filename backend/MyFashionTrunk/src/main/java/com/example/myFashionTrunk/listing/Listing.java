@@ -23,7 +23,7 @@ public class Listing {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne
