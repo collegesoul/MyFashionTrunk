@@ -2,7 +2,9 @@ package com.example.myFashionTrunk.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,13 +21,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty
+    @NotBlank(message = "name is required")
     private String name;
 
-    @Email
-    @NotEmpty
+    @NotBlank(message = "surname is required")
+    private String surname;
+
+    @Email(message = "invalid email format")
+    @NotBlank(message = "email is required")
     private String email;
 
     @NotEmpty
+    @Size(min = 8, max = 15, message = "Password be between 8 - 15 characters")
     private String password;
 }

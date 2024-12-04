@@ -2,6 +2,7 @@ package com.example.myFashionTrunk.category;
 
 import com.example.myFashionTrunk.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,9 +24,9 @@ public class Category {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotEmpty
+    @NotBlank(message = "name is required")
     private String name;
 
-    @NotEmpty
+    @NotBlank(message = "type is required")
     private String type;
 }
