@@ -1,23 +1,17 @@
 import {BrowserRouter as Router, Route, Routes} from "react-router";
-import Navigation from "./Components/Navigation.jsx";
-import Container from "./Components/Elements/Container.jsx";
-import MyListings from "./Components/MyListings.jsx";
-import Categories from "./Components/Categories.jsx";
-import Profile from "./Components/Profile.jsx";
+import Login from "./Components/Login.jsx";
+import Register from "./Components/Register.jsx";
+import MainLayout from "./Components/MainLayout.jsx";
 
 function App() {
     return(
         <Router>
-            <Navigation/>
-            <Container>
-                <main className="mt-20">
-                    <Routes>
-                        <Route path="/" element={<MyListings/>}/>
-                        <Route path="/categories" element={<Categories/>}/>
-                        <Route path="/profile" element={<Profile/>}/>
-                    </Routes>
-                </main>
-            </Container>
+            <Routes>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/register" element={<Register/>}/>
+                <Route path="*" element={<MainLayout/>}/>
+            </Routes>
+
         </Router>
     );
 }

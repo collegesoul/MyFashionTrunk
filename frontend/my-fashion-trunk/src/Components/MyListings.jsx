@@ -3,7 +3,7 @@ import React, {useRef} from 'react';
 import Button from "./Elements/Button.jsx";
 import Card from "./Elements/Card.jsx";
 import FilterDropDown from "./FilterDropDown.jsx";
-import Upload from "./Upload.jsx";
+import {Link} from "react-router";
 
 function MyListings() {
     const funnel = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
@@ -13,14 +13,14 @@ function MyListings() {
     </svg>
     const filterRef = useRef(null);
     const cardItems = [
-        {listingTitle: 'Baby Powder', listingStatus: 'Rejected'},
-        {listingTitle: '', listingStatus: 'Accepted'},
-        {listingTitle: 'Orange', listingStatus: "Rejected"},
-        {listingTitle: '', listingStatus: 'Pending'},
-        {listingTitle: '', listingStatus: 'Accepted'},
-        {listingTitle: 'New hats', listingStatus: 'Pending'},
-        {listingTitle: '', listingStatus: 'Accepted'},
-        {listingTitle: 'Necklace', listingStatus: 'Accepted'},
+        {listingTitle: 'Nike Air Force 1 blue', listingStatus: 'Rejected', category: "no category"},
+        {listingTitle: '', listingStatus: 'Accepted', category: "clothes"},
+        {listingTitle: 'Orange', listingStatus: "Rejected", category: "no category"},
+        {listingTitle: '', listingStatus: 'Pending', category: "no category"},
+        {listingTitle: '', listingStatus: 'Accepted', category: "tech accessories"},
+        {listingTitle: 'New hats', listingStatus: 'Pending', category: "no category"},
+        {listingTitle: '', listingStatus: 'Accepted', category: "shoes"},
+        {listingTitle: 'Necklace', listingStatus: 'Accepted', category: "accessories"},
     ];
 
 
@@ -42,20 +42,19 @@ function MyListings() {
                         {funnel}
                         Filter
                     </span>
-                    <Button text="Upload" style="hover:bg-cyan-500"/>
+                    <Link to="/create-new-listing">
+                        <Button text="Upload" style="hover:bg-cyan-500"/>
+                    </Link>
                 </span>
             </div>
             <div ref={filterRef} className="relative" style={{display:'none'}}>
                 <FilterDropDown/>
             </div>
-            {/*<div>*/}
-            {/*    <Upload/>*/}
-            {/*</div>*/}
             <div className="mt-7">
-                <div className="lg:grid lg:grid-cols-4 lg:gap-y-4 lg:gap-x-0 gap-3 flex flex-wrap justify-center text-center">
+            <div className="lg:grid lg:grid-cols-4 lg:gap-y-4 lg:gap-x-0 gap-3 flex flex-wrap justify-center text-center">
                     {cardItems.map((item, id) => (
                         <span key={id}>
-                            <Card title={item.listingTitle} status={item.listingStatus}/>
+                            <Card title={item.listingTitle} status={item.listingStatus} category={item.category}/>
                         </span>
                     ))}
                 </div>

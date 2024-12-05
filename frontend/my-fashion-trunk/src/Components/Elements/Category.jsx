@@ -7,9 +7,9 @@ function Category () {
     let tag = "Clothes";
 
     return(
-        <div className="flex space-between py-1 px-2 gap-x-3 rounded-2xl items-center bg-amber-200 w-28">
+        <div className="flex space-between py-1 px-2 gap-x-3 rounded-2xl items-center bg-amber-200 w-fit">
             <p className="ml-2">{tag}</p>
-            <span>{closeIcon}</span>
+            <span className="cursor-pointer text-red-500">{closeIcon}</span>
         </div>
     );
 }
