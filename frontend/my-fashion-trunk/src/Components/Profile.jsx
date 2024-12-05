@@ -23,8 +23,12 @@ function Profile() {
         }
 
     }
-    const handleDelete = async (e) => {
-        e.preventDefault();
+    //TODO: Look at this later
+    const handleDelete = async () => {
+        if (!user || !user.id) {
+            console.error("User not found!");
+            return;
+        }
         try {
             const url = `http://localhost:8080/api/v1/user/${user.id}`;
             await axios.delete(url);

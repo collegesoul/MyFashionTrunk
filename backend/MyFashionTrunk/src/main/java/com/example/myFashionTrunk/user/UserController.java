@@ -15,6 +15,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
     User getUser(@Valid @RequestBody UserRequest userRequest) throws AuthenticationException {
         return userService.authenticateUser(userRequest);
@@ -32,8 +33,9 @@ public class UserController {
         return userService.updateUser(userRequest);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    void deleteUser(@PathVariable Integer id) {
+    void deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
     }
 

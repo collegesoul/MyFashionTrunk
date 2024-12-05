@@ -13,7 +13,7 @@ Home view
 ![homeView](screenshots/homeView.png)
 
 categories for editing categories
-![categories](screenshots/categories.png)
+![categories1](screenshots/categories.png)
 
 add listing page for adding items
 ![add_listing](screenshots/add_listing.png)

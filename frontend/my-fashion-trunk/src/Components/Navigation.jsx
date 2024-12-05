@@ -27,7 +27,6 @@ function Navigation() {
     }
 
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
 
     return (
         <>
@@ -61,7 +60,7 @@ function Navigation() {
                 </nav>
             </div>
             <div ref={isVisibleRef} style={{display: "none"}}>
-                <UserDropDown/>
+                <UserDropDown name={user.name}/>
             </div>
         </>
     );
