@@ -32,6 +32,6 @@ public class User {
     private String email;
 
     @NotEmpty
-    @Size(min = 8, max = 15, message = "Password be between 8 - 15 characters")
+    @Size(min = 8, message = "Password be a minimum of 8 characters")
     private String password;
 }

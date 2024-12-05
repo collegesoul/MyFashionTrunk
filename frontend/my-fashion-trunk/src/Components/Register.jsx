@@ -32,7 +32,8 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:8080/api/v1/user/register", formData);
+            const response = await axios.post("http://localhost:8080/api/v1/user/register", formData);
+            console.log(response);
             navigate("/");
         } catch (error) {
             console.error("Error during registration:", error);
@@ -49,7 +50,7 @@ function Register() {
                 </div>
 
                 <div className="border-2 rounded-2xl border-gray-300 p-6 shadow-xl bg-white">
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className="mt-4">
                             <label className="form-label">Name</label>
                             <input
@@ -100,7 +101,6 @@ function Register() {
                                 color="bg-green-500"
                                 style="hover:bg-green-600"
                                 type="submit"
-                                onClick={handleSubmit}
                             />
                         </div>
                     </form>
