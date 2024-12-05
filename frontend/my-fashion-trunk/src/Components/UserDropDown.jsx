@@ -16,7 +16,7 @@ function UserDropDown({name = "Guest"}){
             <div className="grid grid-cols-1 place-items-center gap-y-5">
                 <div className="flex items-center gap-x-2.5">
                     <span className="bg-gray-600 rounded-full w-6 h-6 inline-block"></span>
-                    <span className="text-gray-700 text-lg">{name}</span>
+                    <span className="text-gray-700 text-lg">{name !== null && name !== "" ? name : "Guest"}</span>
                 </div>
                 <div className="cursor-pointer lg:text-start hover:bg-gray-200 p-2 w-full">
                     <NavLink to="/profile">
