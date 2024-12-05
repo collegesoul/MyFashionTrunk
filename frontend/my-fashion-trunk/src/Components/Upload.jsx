@@ -29,7 +29,7 @@ function Upload() {
                     <div className="mt-8">
                         <label className="form-label">Upload image:</label>
                         <input className="w-10/12 lg:w-7/12 block border-2 rounded text-gray-600 cursor-pointer
-                        placeholder:italic file:bg-gray-600 file:border-0 file:rounded file:p-1.5
+                        placeholder:italic file:bg-gray-500 file:border-0 file:rounded file:p-1.5
                         file:text-md file:m-1 file:cursor-pointer file:font-medium file:text-white"
                                name="file" type="file"/>
                     </div>

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping("api/v1/listings")
+@RequestMapping("/api/v1/listings")
 public class ListingController {
     private final ListingService listingService;
 

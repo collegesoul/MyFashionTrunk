@@ -51,13 +51,18 @@ function MyListings() {
                 <FilterDropDown/>
             </div>
             <div className="mt-7">
-            <div className="lg:grid lg:grid-cols-4 lg:gap-y-4 lg:gap-x-0 gap-3 flex flex-wrap justify-center text-center">
-                    {cardItems.map((item, id) => (
-                        <span key={id}>
+                {(cardItems.length === 0)? (
+                    <p className="text-center mt-4 text-2xl text-gray-700 font-semibold">No Listings to display</p>
+                ): (
+                    <div
+                        className="lg:grid lg:grid-cols-4 lg:gap-y-4 lg:gap-x-0 gap-3 flex flex-wrap justify-center text-center">
+                        {cardItems.map((item, id) => (
+                            <span key={id}>
                             <Card title={item.listingTitle} status={item.listingStatus} category={item.category}/>
                         </span>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </>
     );

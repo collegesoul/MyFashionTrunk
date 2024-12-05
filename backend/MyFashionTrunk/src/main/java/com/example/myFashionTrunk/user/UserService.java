@@ -26,13 +26,19 @@ public class UserService {
         this.listingRepo = listingRepo;
     }
 
-    public void createUser(User user) {
-        if(userRepo.existsByEmail(user.getEmail())) {
+    public User createUser(UserRequest userRequest) {
+        User newUser = new User();
+        if(userRepo.existsByEmail(userRequest.getEmail())) {
             throw new ValidationException("email address already in use");
         }
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(hashedPassword);
-        userRepo.save(user);
+        String hashedPassword = passwordEncoder.encode(userRequest.getPassword());
+        newUser.setName(userRequest.getName());
+        newUser.setSurname(userRequest.getSurname());
+        newUser.setEmail(userRequest.getEmail());
+        newUser.setPassword(hashedPassword);
+
+        userRepo.save(newUser);
+        return newUser;
     }
 
     public User authenticateUser(User user) throws AuthenticationException {
