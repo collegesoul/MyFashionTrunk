@@ -1,8 +1,16 @@
 import Button from "./Elements/Button.jsx";
-import {NavLink} from "react-router";
+import {NavLink, useNavigate} from "react-router";
 import PropTypes from "prop-types";
 
 function UserDropDown({name = "Guest"}){
+    const navigate = useNavigate();
+    localStorage.removeItem("user");
+
+    const handleSignOut = () => {
+        localStorage.removeItem("user");
+        navigate("/login");
+    }
+
     return (
         <div className="modal right-3 top-12 px-5 pb-7 pt-4 lg:w-52 w-50">
             <div className="grid grid-cols-1 place-items-center gap-y-5">
@@ -16,7 +24,7 @@ function UserDropDown({name = "Guest"}){
                     </NavLink>
                 </div>
                 <div>
-                    <Button text="Logout" color="bg-red-400" style="hover:bg-red-500"/>
+                    <Button text="Logout" color="bg-red-400" style="hover:bg-red-500" clickEvent={handleSignOut}/>
                 </div>
             </div>
         </div>

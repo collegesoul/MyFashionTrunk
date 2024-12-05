@@ -29,15 +29,18 @@ function Profile() {
             console.error("User not found!");
             return;
         }
+        const confirmDelete = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
+        if (!confirmDelete) return;
+
         try {
             const url = `http://localhost:8080/api/v1/user/${user.id}`;
             await axios.delete(url);
-            localStorage.removeItem('user');
+            localStorage.removeItem("user");
             navigate("/login");
         } catch (error) {
-            console.error(error);
+            console.error("Error deleting account:", error);
         }
-    }
+    };
 
 
     return(
