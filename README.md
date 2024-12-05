@@ -31,6 +31,8 @@ register page for new users
 ![register](screenshots/register.png)
 
 
-Environment Variables needed
-GOOGLE_APPLICATION_CREDENTIALS
+### Environment Variables needed:<br>
+SPRING_DATASOURCE_USERNAME<br>
+SPRING_DATASOURCE_PASSWORD<br>
+GOOGLE_APPLICATION_CREDENTIALS<br>
 GOOGLE_CLOUD_PROJECT
