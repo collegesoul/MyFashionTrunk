@@ -15,9 +15,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-    User getUser(@RequestBody User user) throws AuthenticationException {
-        return userService.authenticateUser(user);
+    @PostMapping("/login")
+    User getUser(@Valid @RequestBody UserRequest userRequest) throws AuthenticationException {
+        return userService.authenticateUser(userRequest);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -26,9 +26,10 @@ public class UserController {
         return userService.createUser(userRequest);
     }
 
-    @PutMapping("/{id}")
-    void updateUser(@PathVariable Integer id, @Valid @RequestBody User user) {
-        userService.updateUser(id, user);
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping
+    User updateUser(@Valid @RequestBody UserRequest userRequest) {
+        return userService.updateUser(userRequest);
     }
 
     @DeleteMapping("/{id}")

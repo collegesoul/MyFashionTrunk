@@ -1,6 +1,8 @@
 import Button from "./Elements/Button.jsx";
-import {NavLink} from "react-router";
+import {NavLink, useNavigate} from "react-router";
 import Register from "./Register.jsx";
+import {useState} from "react";
+import axios from "axios";
 
 function Login() {
    const briefcaseIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -11,6 +13,30 @@ function Login() {
         <path
             d="M3 18.4v-2.796a4.3 4.3 0 0 0 .713.31A26.226 26.226 0 0 0 12 17.25c2.892 0 5.68-.468 8.287-1.335.252-.084.49-.189.713-.311V18.4c0 1.452-1.047 2.728-2.523 2.923-2.12.282-4.282.427-6.477.427a49.19 49.19 0 0 1-6.477-.427C4.047 21.128 3 19.852 3 18.4Z"/>
     </svg>
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
+
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post("http://localhost:8080/api/v1/user/login", formData);
+            localStorage.setItem('user', JSON.stringify(response.data));
+            navigate("/");
+        } catch (error) {
+            console.error("Error during registration:", error);
+        }
+    };
 
 
     return (
@@ -22,7 +48,7 @@ function Login() {
                 </div>
 
                 <div className="border-2 rounded-2xl border-gray-300 p-6 shadow-xl bg-white">
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className="mt-4">
                             <label className="form-label">Email Address</label>
                             <input
@@ -30,6 +56,8 @@ function Login() {
                                 name="email"
                                 type="email"
                                 placeholder="Enter email"
+                                value={formData.email}
+                                onChange={handleChange}
                             />
                         </div>
                         <div className="mt-4">
@@ -38,10 +66,17 @@ function Login() {
                                 className="form-input w-full"
                                 name="password"
                                 type="password"
+                                placeholder="Enter password"
+                                value={formData.password}
+                                onChange={handleChange}
                             />
                         </div>
                         <div className="mt-6 text-center">
-                            <Button text="Login" color="bg-green-500" style="hover:bg-green-600"/>
+                            <Button text="Login"
+                                    color="bg-green-500"
+                                    style="hover:bg-green-600"
+                                    type="submit"
+                            />
                         </div>
                     </form>
 

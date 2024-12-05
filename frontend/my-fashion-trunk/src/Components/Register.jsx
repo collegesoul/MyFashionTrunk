@@ -33,7 +33,7 @@ function Register() {
         e.preventDefault();
         try {
             const response = await axios.post("http://localhost:8080/api/v1/user/register", formData);
-            console.log(response);
+            localStorage.setItem('user', JSON.stringify(response.data));
             navigate("/");
         } catch (error) {
             console.error("Error during registration:", error);

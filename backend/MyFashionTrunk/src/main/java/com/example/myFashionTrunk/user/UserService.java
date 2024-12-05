@@ -41,33 +41,33 @@ public class UserService {
         return newUser;
     }
 
-    public User authenticateUser(User user) throws AuthenticationException {
-       User existingUser = userRepo.findByEmail(user.getEmail())
+    public User authenticateUser(UserRequest userRequest) throws AuthenticationException {
+       User existingUser = userRepo.findByEmail(userRequest.getEmail())
                .orElseThrow(() -> new EntityNotFoundException("email address does not exist"));
 
-        String userPassword = existingUser.getPassword();
-        if(checkPassword(user, userPassword)) {
+        if(checkPassword(existingUser, userRequest.getPassword())) {
             throw new AuthenticationException("password does not match");
         }
         return existingUser;
     }
 
-    public void updateUser(Integer userId, User user) {
-        User existingUser = userRepo.findById(userId).orElseThrow(() ->new EntityNotFoundException("user does not exist"));
-        if(!existingUser.getName().equals(user.getName())) {
-            existingUser.setName(user.getName());
+    public User updateUser(UserRequest userRequest) {
+        User existingUser = userRepo.findById(userRequest.getId()).orElseThrow(() ->new EntityNotFoundException("user does not exist"));
+        if(!existingUser.getName().equals(userRequest.getName())) {
+            existingUser.setName(userRequest.getName());
         }
-        if(!existingUser.getSurname().equals(user.getSurname())) {
-            existingUser.setSurname(user.getSurname());
+        if(!existingUser.getSurname().equals(userRequest.getSurname())) {
+            existingUser.setSurname(userRequest.getSurname());
         }
-        if(!existingUser.getEmail().equals(user.getEmail())) {
-            existingUser.setEmail(user.getEmail());
+        if(!existingUser.getEmail().equals(userRequest.getEmail())) {
+            existingUser.setEmail(userRequest.getEmail());
         }
-        if (!Objects.equals(user.getPassword(), "")) {
-            String hashedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(hashedPassword);
+        if (!Objects.equals(userRequest.getPassword(), "") && !Objects.equals(userRequest.getPassword(), existingUser.getPassword())) {
+            String hashedPassword = passwordEncoder.encode(userRequest.getPassword());
+            userRequest.setPassword(hashedPassword);
         }
         userRepo.save(existingUser);
+        return existingUser;
     }
 
     public void deleteUser(Integer userId) {
@@ -77,7 +77,7 @@ public class UserService {
     }
 
 
-    private boolean checkPassword(User user, String hashedPassword) {
-        return passwordEncoder.matches(user.getPassword(), hashedPassword);
+    private boolean checkPassword(User user, String plainPassword) {
+        return passwordEncoder.matches(plainPassword, user.getPassword());
     }
 }
