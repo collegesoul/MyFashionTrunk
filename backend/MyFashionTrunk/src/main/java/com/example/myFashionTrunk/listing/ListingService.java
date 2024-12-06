@@ -50,7 +50,7 @@ public class ListingService {
         }
 
         // Store Image in bucket and get url to image
-        String imageUrl = imgStorage.storeImage(image, bucketName);
+        String imageUrl = imgStorage.storeImage(image, bucketName, title, user.getName());
 
         // Create new Listing, save the values and set initial category and status
         Listing listing = new Listing();

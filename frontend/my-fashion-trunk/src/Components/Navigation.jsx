@@ -49,7 +49,7 @@ function Navigation() {
                         <li>
                             <NavLink
                                 to="/"
-                                className={({ isActive }) => (isActive ? "text-gray-800 font-semibold" : "nav-link")}
+                                className={({isActive}) => (isActive ? "text-gray-800 font-semibold" : "nav-link")}
                             >
                                 My Listings
                             </NavLink>
@@ -57,7 +57,7 @@ function Navigation() {
                         <li>
                             <NavLink
                                 to="/categories"
-                                className={({ isActive }) => (isActive ? "text-gray-800 font-semibold" : "nav-link")}
+                                className={({isActive}) => (isActive ? "text-gray-800 font-semibold" : "nav-link")}
                             >
                                 Categories
                             </NavLink>
@@ -70,11 +70,9 @@ function Navigation() {
                     </div>
                 </nav>
             </div>
-            {user || (
-                <div ref={isVisibleRef} style={{ display: "none" }}>
-                    <UserDropDown name={user?.name || "Guest"} />
-                </div>
-            )}
+            <div ref={isVisibleRef} style={{display: "none"}}>
+                <UserDropDown name={user?.name || "Guest"}/>
+            </div>
         </>
     );
 }

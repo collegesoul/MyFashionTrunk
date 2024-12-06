@@ -1,5 +1,5 @@
 import Button from "./Elements/Button.jsx";
-import {NavLink} from "react-router";
+import {NavLink, useNavigate} from "react-router";
 import {useState} from "react";
 import axios from "axios";
 
@@ -8,28 +8,32 @@ function Upload() {
                            stroke="currentColor" className="size-6">
         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
     </svg>
+    const navigate = useNavigate()
     const user = JSON.parse(localStorage.getItem("user"));
     const [title, setTitle] = useState("");
-    const [file, setFile] = useState(null);
+    const [image, setImage] = useState(null);
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
     }
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+        setImage(e.target.files[0]);
     }
 
     const handleSubmitForm = async (e) => {
         e.preventDefault();
-        if (!file) {
-            alert("Please select a file before submitting");
+        if (!image) {
+            alert("Please select a image before submitting");
         }
-        const formData = new FormData({
-            title: title,
-            file: file,
-            userId: user.id,
-        });
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("image", image);
+        formData.append("userId", user.id);
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+
         try {
             const response = await axios.post(
                 "http://localhost:8080/api/v1/listings",
@@ -41,8 +45,9 @@ function Upload() {
                 }
             );
             console.log("File uploaded successfully:", response.data);
+            navigate("/");
         } catch (error) {
-            console.error("Error uploading file:", error);
+            console.error("Error uploading image:", error);
         }
     }
 
@@ -73,7 +78,6 @@ function Upload() {
                         placeholder:italic file:bg-gray-500 file:border-0 file:rounded file:p-1.5
                         file:text-md file:m-1 file:cursor-pointer file:font-medium file:text-white"
                                name="file" type="file"
-                               value={file}
                                onChange={handleFileChange}
                         />
                     </div>

@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 
 function UserDropDown({name = "Guest"}){
     const navigate = useNavigate();
-    localStorage.removeItem("user");
 
     const handleSignOut = () => {
         localStorage.removeItem("user");

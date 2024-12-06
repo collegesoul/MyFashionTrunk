@@ -2,11 +2,20 @@ import Button from "./Elements/Button.jsx";
 import {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router";
+import Login from "./Login.jsx";
 
 function Profile() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const [formData, setFormData] = useState({...user});
     const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+        return(
+            <Login/>
+        );
+    }
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [formData, setFormData] = useState({...user});
 
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value})

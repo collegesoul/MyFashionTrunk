@@ -18,16 +18,16 @@ public class ImageStorageService {
         this.storage = storage;
     }
 
-    public String storeImage(MultipartFile image, String bucketName) throws IOException {
+    public String storeImage(MultipartFile image, String bucketName, String title, String userName) throws IOException {
         Bucket bucket = storage.get(bucketName);
         if (bucket == null) {
             throw new IOException(String.format("Bucket %s does not exist", bucketName));
         }
 
-        String filename = String.format("%s_%s", LocalDate.now(), image.getOriginalFilename());
+        String filename = String.format("%s/%s_%s_%s", "images" ,LocalDate.now(), userName, title);
 
         bucket.create(
-                String.valueOf(BlobInfo.newBuilder(bucketName, String.format("images/%s", filename)).build()),
+                filename,
                 image.getBytes()
         );
 
