@@ -2,7 +2,7 @@
 
 The Application uses a React frontend and Springboot backend. 
 It integrates Google Cloud Vision API for object detection and
-Google Cloud Store for storage, and it's connected to a PostgreSQL database .
+Google Cloud Store for storage of images, and it's connected to a PostgreSQL database .
 
 ### Note: There's no build process in running the application as it could not be finished before the deadline. 
 
@@ -11,6 +11,8 @@ Google Cloud Store for storage, and it's connected to a PostgreSQL database .
 
 Home view
 ![homeView](screenshots/homeView.png)
+
+![homeView1](screenshots/homeView1.png)
 
 categories for editing categories
 ![categories1](screenshots/categories.png)
