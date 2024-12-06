@@ -4,7 +4,6 @@ import com.example.myFashionTrunk.category.Category;
 import com.example.myFashionTrunk.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

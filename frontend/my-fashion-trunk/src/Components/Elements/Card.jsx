@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-function Card({title, status = "Accepted", category = ""}) {
+function Card({title, status, category, imageUrl, imgAlt}) {
     const deleteIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                             className="size-5">
         <path fillRule="evenodd"
@@ -35,7 +35,9 @@ function Card({title, status = "Accepted", category = ""}) {
                     {deleteIcon}
                 </span>
             </div>
-            <div className="bg-amber-700 w-auto h-44 my-4"></div>
+            <div className="my-4 w-auto shadow">
+                <img src={imageUrl} alt={imgAlt} className="h-44 w-fit"/>
+            </div>
             <div className="bg-gray-200 rounded-2xl shadow w-fit px-1.5">
                 {category && <p>{category}</p>}
             </div>
@@ -53,6 +55,8 @@ Card.propTypes = {
     status: PropTypes.string,
     title: PropTypes.string,
     category: PropTypes.string,
+    imageUrl: PropTypes.string,
+    imgAlt: PropTypes.string,
 }
 
 export default Card

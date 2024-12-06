@@ -1,9 +1,10 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Button from "./Elements/Button.jsx";
 import Card from "./Elements/Card.jsx";
 import FilterDropDown from "./FilterDropDown.jsx";
 import {Link} from "react-router";
+import axios from "axios";
 
 function MyListings() {
     const funnel = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
@@ -11,18 +12,23 @@ function MyListings() {
         <path strokeLinecap="round" strokeLinejoin="round"
               d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"/>
     </svg>
+    const user = JSON.parse(localStorage.getItem("user"));
     const filterRef = useRef(null);
+    const [listings, setListings] = useState([]);
 
-    const cardItems = [
-        {listingTitle: 'Nike Air Force 1 blue', listingStatus: 'Rejected', category: "no category"},
-        {listingTitle: '', listingStatus: 'Accepted', category: "clothes"},
-        {listingTitle: 'Orange', listingStatus: "Rejected", category: "no category"},
-        {listingTitle: '', listingStatus: 'Pending', category: "no category"},
-        {listingTitle: '', listingStatus: 'Accepted', category: "tech accessories"},
-        {listingTitle: 'New hats', listingStatus: 'Pending', category: "no category"},
-        {listingTitle: '', listingStatus: 'Accepted', category: "shoes"},
-        {listingTitle: 'Necklace', listingStatus: 'Accepted', category: "accessories"},
-    ];
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const url = `http://localhost:8080/api/v1/listings/${user.id}`;
+                const response = await axios.get(url);
+                console.log(response.data);
+                setListings(response.data);
+            }catch (error) {
+                console.error("Error fetching listings:", error);
+            }
+        }
+        fetchData();
+    }, [])
 
 
     const toggleFilter = () => {
@@ -52,14 +58,14 @@ function MyListings() {
                 <FilterDropDown/>
             </div>
             <div className="mt-7">
-                {(cardItems.length === 0)? (
+                {(listings.length === 0)? (
                     <p className="text-center mt-4 text-2xl text-gray-700 font-semibold">No Listings to display</p>
                 ): (
                     <div
                         className="lg:grid lg:grid-cols-4 lg:gap-y-4 lg:gap-x-0 gap-3 flex flex-wrap justify-center text-center">
-                        {cardItems.map((item, id) => (
+                        {listings.map((item, id) => (
                             <span key={id}>
-                            <Card title={item.listingTitle} status={item.listingStatus} category={item.category}/>
+                            <Card title={item.title} status={item.status} category={item.category} imageUrl={item.imageUrl} imgAlt={item.title}/>
                         </span>
                         ))}
                     </div>

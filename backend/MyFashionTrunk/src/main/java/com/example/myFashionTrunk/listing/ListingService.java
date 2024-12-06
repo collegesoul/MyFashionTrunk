@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -31,9 +32,24 @@ public class ListingService {
         this.imgStorage = imgStorage;
     }
 
-    //TODO: Implement these methods
-    public List<Listing> getAllListingsByUserId(Integer userId) {
-        return listingRepo.findAllByUserId(userId);
+    public List<ListingResponse> getAllListingsByUserId(Integer userId) {
+        List<ListingResponse> userListings = new ArrayList<>();
+        for(Listing listing : listingRepo.findAllByUserId(userId)) {
+            ListingResponse listingResponse = new ListingResponse();
+            listingResponse.setId(listing.getId());
+            listingResponse.setTitle(listing.getTitle());
+            listingResponse.setImageUrl(listing.getImageUrl());
+            listingResponse.setStatus(listing.getStatus());
+
+            Category c = listing.getCategory();
+            if (c != null) {
+                listingResponse.setCategory(c.getName());
+            } else {
+                listingResponse.setCategory("no category");
+            }
+            userListings.add(listingResponse);
+        }
+        return userListings;
     }
 
     public void createListing(String title, Integer userId, MultipartFile image) throws IOException, ExecutionException, InterruptedException {

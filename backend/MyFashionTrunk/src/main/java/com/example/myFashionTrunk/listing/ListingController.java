@@ -1,6 +1,5 @@
 package com.example.myFashionTrunk.listing;
 
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +18,7 @@ public class ListingController {
     }
 
     @GetMapping("/{userid}")
-    List<Listing> getAllListings(@PathVariable Integer userid){
+    List<ListingResponse> getAllListings(@PathVariable Integer userid){
         return listingService.getAllListingsByUserId(userid);
     }
 
