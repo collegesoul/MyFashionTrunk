@@ -42,7 +42,9 @@ public class ImageDetectionService {
                     .collect(Collectors.toSet());
 
             Category matchedCategory = categories.stream()
-                    .filter(category -> labels.contains(category.getName().toLowerCase()))
+                    .filter(category -> labels
+                            .stream()
+                            .anyMatch(label->label.contains(category.getName().toLowerCase())))
                     .findFirst()
                     .orElse(null);
             return CompletableFuture.completedFuture(matchedCategory);

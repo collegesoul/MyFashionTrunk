@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useRef} from 'react';
-import {NavLink} from "react-router";
+import React, {useEffect, useRef, useState} from 'react';
+import {NavLink, useLocation} from "react-router";
 import UserDropDown from "./UserDropDown.jsx";
 
 function Navigation() {
@@ -23,17 +23,31 @@ function Navigation() {
         </svg>
     );
 
+    const user = JSON.parse(localStorage.getItem("user"));
     const isVisibleRef = useRef(null);
+    const location = useLocation();
+    const [isDropDownVisible, setIsDropDownVisible] = useState(false);
+
+    const handleClickOutside = (e) =>{
+        if (isVisibleRef.current && !isVisibleRef.current.contains(e.target)) {
+            setIsDropDownVisible(false);
+        }
+    }
 
     const toggleUserDropDown = () => {
-        if (isVisibleRef.current) {
-            const isHidden = isVisibleRef.current.style.display === "none";
-            isVisibleRef.current.style.display = isHidden ? "block" : "none";
+        setIsDropDownVisible(!isDropDownVisible);
+        if (isDropDownVisible) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
         }
     };
 
+    useEffect(()=>{
+        setIsDropDownVisible(false);
+    }, [location]);
 
-    const user = JSON.parse(localStorage.getItem("user")) || null;
+
 
     return (
         <>
@@ -70,9 +84,11 @@ function Navigation() {
                     </div>
                 </nav>
             </div>
-            <div ref={isVisibleRef} style={{display: "none"}}>
-                <UserDropDown name={user?.name || "Guest"}/>
-            </div>
+            {isDropDownVisible && (
+                <div ref={isVisibleRef}>
+                    <UserDropDown name={user?.name || "Guest"}/>
+                </div>
+            )}
         </>
     );
 }

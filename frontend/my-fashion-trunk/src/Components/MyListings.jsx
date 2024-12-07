@@ -18,47 +18,52 @@ function MyListings() {
     </svg>
     const user = JSON.parse(localStorage.getItem("user"));
     const filterRef = useRef(null);
-    const [listings, setListings] = useState([]);
-    const [listingId, setListingId] = useState(0);
+    const [isDropDownVisible, setIsDropDownVisible] = useState(false);
+    const [listings, setListings] = useState(()=>{
+        const savedListings = localStorage.getItem("listings");
+        return savedListings ? JSON.parse(savedListings) : [];
+    });
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const url = `http://localhost:8080/api/v1/listings/${user.id}`;
                 const response = await axios.get(url);
-                console.log(response.data);
                 setListings(response.data);
+                localStorage.setItem("listings", JSON.stringify(response.data));
             }catch (error) {
                 console.error("Error fetching listings:", error);
             }
         }
         fetchData();
-    }, [listings, user.id])
+    }, [user?.id])
 
 
-    const toggleFilter = () => {
-        if (filterRef.current) {
-            const isHidden = filterRef.current.style.display === 'none';
-            filterRef.current.style.display = (isHidden) ? 'block' : 'none';
+    const handleClickOutside = (e) =>{
+        if (filterRef.current && !filterRef.current.contains(e.target)) {
+            setIsDropDownVisible(false);
         }
     }
-    
-    useEffect(()=>{
-        const fetchData = async () => {
-            try {
-                const url = `http://localhost:8080/api/v1/listings/${listingId}`;
-                await axios.delete(url);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchData();
-    }, [listingId])
 
-    const handleOnDelete = (index) => {
-        const id = listings[index].id;
-        setListingId(id);
-        listings.filter((_, i)=> i === index)
+    const toggleFilter = () => {
+        setIsDropDownVisible(!isDropDownVisible);
+        if (isDropDownVisible) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+    }
+
+    const handleOnDelete = async (index) => {
+       try {
+           const id = listings[index].id;
+           const url = `http://localhost:8080/api/v1/listings/${id}`;
+           await axios.delete(url);
+           setListings(listings.filter((item)=> item.id !== id))
+           localStorage.setItem("listings", JSON.stringify(listings));
+       } catch (error) {
+           console.log(error);
+       }
     }
 
 
@@ -81,11 +86,13 @@ function MyListings() {
                     </Link>
                 </span>
             </div>
-            <div ref={filterRef} className="relative" style={{display:'none'}}>
-                <FilterDropDown/>
-            </div>
+            {isDropDownVisible && (
+                <div ref={filterRef} className="relative">
+                    <FilterDropDown/>
+                </div>
+            )}
             <div className="mt-7">
-                {(listings.length === 0)? (
+                {(listings.length === 0) ? (
                     <p className="text-center mt-4 text-2xl text-gray-700 font-semibold">No Listings to display</p>
                 ): (
                     <div

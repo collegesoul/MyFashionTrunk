@@ -35,7 +35,7 @@ function Upload() {
         }
 
         try {
-            const response = await axios.post(
+            await axios.post(
                 "http://localhost:8080/api/v1/listings",
                 formData,
                 {
@@ -44,7 +44,6 @@ function Upload() {
                     },
                 }
             );
-            console.log("File uploaded successfully:", response.data);
             navigate("/");
         } catch (error) {
             console.error("Error uploading image:", error);
