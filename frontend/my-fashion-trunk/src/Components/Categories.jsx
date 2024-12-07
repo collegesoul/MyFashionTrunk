@@ -33,7 +33,7 @@ function Categories() {
     const handleSelectedCategory = (e) => setCategoryType(e.target.value);
     const handleCustomCategory = (e) => setCustomCategory(e.target.value);
 
-    // Handle adding a new category
+
     const handleAddCategory = async (e) => {
         e.preventDefault();
         const formData = {
@@ -76,7 +76,7 @@ function Categories() {
                 } catch (error) {
                     console.error("Error deleting category:", error);
                 } finally {
-                    setDeletedCategoryId(null); // Reset deleted category ID
+                    setDeletedCategoryId(null);
                 }
             };
             deleteCategory();
@@ -112,11 +112,19 @@ function Categories() {
                     <div className="border-2 border-slate-300 rounded-b w-full bg-slate-100 mt-4 min-h-80">
                         <div className="flex gap-3 m-3 flex-wrap">
                             {allowedCategory.map((category, index) => (
-                                <Category
-                                    key={category.id}
-                                    name={category.name}
-                                    clickEvent={() => deleteAllowedCategory(index)}
-                                />
+                                (category.user === null) ? (
+                                    <Category
+                                        key={category.id}
+                                        name={category.name}
+                                        canDelete={false}
+                                    />
+                                ) : (
+                                    <Category
+                                        key={category.id}
+                                        name={category.name}
+                                        clickEvent={() => deleteAllowedCategory(index)}
+                                    />
+                                )
                             ))}
                         </div>
                     </div>
@@ -126,11 +134,19 @@ function Categories() {
                     <div className="border-2 border-slate-300 rounded-b w-full bg-slate-100 mt-4 min-h-80">
                         <div className="flex flex-wrap gap-3 m-3">
                             {prohibitedCategory.map((category, index) => (
-                                <Category
-                                    key={category.id}
-                                    name={category.name}
-                                    clickEvent={() => deleteProhibitedCategory(index)}
-                                />
+                                (category.user === null) ? (
+                                    <Category
+                                        key={category.id}
+                                        name={category.name}
+                                        canDelete={false}
+                                    />
+                                ) : (
+                                    <Category
+                                        key={category.id}
+                                        name={category.name}
+                                        clickEvent={() => deleteProhibitedCategory(index)}
+                                    />
+                                )
                             ))}
                         </div>
                     </div>

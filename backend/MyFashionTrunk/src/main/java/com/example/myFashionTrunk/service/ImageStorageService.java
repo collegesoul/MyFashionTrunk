@@ -34,7 +34,8 @@ public class ImageStorageService {
     }
 
     public void deleteImage(String bucketName, String filename) {
-        BlobId blobId = BlobId.of(bucketName, filename);
+        String imageName = filename.split(String.format("%s/", bucketName))[1];
+        BlobId blobId = BlobId.of(bucketName, imageName);
         storage.delete(blobId);
 
     }

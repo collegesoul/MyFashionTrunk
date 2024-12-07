@@ -82,7 +82,11 @@ function Upload() {
                         />
                     </div>
                     <div className="mt-10">
-                        <Button text="Create New listing" type="submit"/>
+                        <Button
+                            text="Create New listing"
+                            type="submit"
+                            style="hover:bg-cyan-500"
+                        />
                     </div>
                 </form>
             </div>

@@ -32,7 +32,6 @@ function Profile() {
         }
 
     }
-    //TODO: Look at this later
     const handleDelete = async () => {
         if (!user || !user.id) {
             console.error("User not found!");
@@ -95,6 +94,7 @@ function Profile() {
                     <div className="mt-6">
                         <Button text="Update Profile"
                                 type="submit"
+                                style="hover:bg-cyan-500"
                         />
                     </div>
                 </form>

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-function Card({title, status, category, imageUrl, imgAlt}) {
+function Card({title, status, category, imageUrl, imgAlt, onDelete}) {
     const deleteIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                             className="size-5">
         <path fillRule="evenodd"
@@ -31,12 +31,12 @@ function Card({title, status, category, imageUrl, imgAlt}) {
                     <span className={`${statusColour} h-3 w-3 mr-2 rounded-full inline-block`}></span>
                     <span>{status}</span>
                 </div>
-                <span className="cursor-pointer">
+                <span className="cursor-pointer" onClick={onDelete}>
                     {deleteIcon}
                 </span>
             </div>
             <div className="my-4 w-auto shadow">
-                <img src={imageUrl} alt={imgAlt} className="h-44 w-fit"/>
+                <img src={imageUrl} alt={imgAlt} className="h-52 w-full object-cover"/>
             </div>
             <div className="bg-gray-200 rounded-2xl shadow w-fit px-1.5">
                 {category && <p>{category}</p>}
@@ -57,6 +57,7 @@ Card.propTypes = {
     category: PropTypes.string,
     imageUrl: PropTypes.string,
     imgAlt: PropTypes.string,
+    onDelete: PropTypes.func,
 }
 
 export default Card
