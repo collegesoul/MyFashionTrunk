@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * response object of listing sent to the client
+ * **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

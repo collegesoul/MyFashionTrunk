@@ -16,19 +16,31 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for image detection operations
+ * **/
 @Service
 public class ImageDetectionService {
 
     private final CategoryRepository categoryRepo;
-
-
     private final CloudVisionTemplate cloudVisionTemplate;
 
+    /**
+     * Constructor for ImageDetectionService
+     * @param categoryRepo repository for category entities
+     * @param cloudVisionTemplate the template for interacting with Google Cloud Vision API
+     * **/
     public ImageDetectionService(CategoryRepository categoryRepo, CloudVisionTemplate cloudVisionTemplate) {
         this.categoryRepo = categoryRepo;
         this.cloudVisionTemplate = cloudVisionTemplate;
     }
 
+    /**
+     * Labels an image using Google Cloud Vision API and matches it to a category
+     * @param image image to be labelled in bytes
+     * @return CompletableFuture containing a category if there's a match else null
+     * @throws IOException if an error occurs during image processing
+     * **/
     @Async
     public CompletableFuture<Category> labelImage(byte[] image) throws IOException {
         try {

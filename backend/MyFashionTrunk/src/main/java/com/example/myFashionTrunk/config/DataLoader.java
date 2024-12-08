@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * Component that loads initial data into the database when the application starts
+ * **/
 @Component
 public class DataLoader implements CommandLineRunner {
     private final CategoryRepository categoryRepo;
@@ -15,9 +18,12 @@ public class DataLoader implements CommandLineRunner {
         this.categoryRepo = categoryRepo;
     }
 
-
+    /**
+     * Runs data loading
+     * @param args commandline arguments
+     * **/
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (categoryRepo.count() == 0) {
             categoryRepo.saveAll(Arrays.asList(
                     new Category(null, null, "Fashion accessories", "Allowed"),

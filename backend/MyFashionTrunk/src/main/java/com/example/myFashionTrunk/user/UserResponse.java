@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * response object of user sent to the client
+ * It doesn't include the user password for security
+ * **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

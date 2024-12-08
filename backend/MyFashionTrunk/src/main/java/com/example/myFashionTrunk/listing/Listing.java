@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entity represent a listing
+ * **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,13 +32,27 @@ public class Listing {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    /**
+     * Title of the listing
+     * It should not be more than 60 characters or lesser than 3 characters
+     * This field is required and should not contain a null or an empty character ("")
+     * **/
     @NotBlank(message = "title is required")
     @Size(min = 3, max = 60, message = "title should be between 3 - 60 characters long")
     private String title;
 
+    /**
+     * image url of listing stored on cloud
+     * This field is required and should not contain a null or an empty character ("")
+     * **/
     @NotBlank(message = "image_url is required")
     private String imageUrl;
 
+    /**
+     * The status of image being analyzed by AI Object detection
+     * Values include "Accepted", "Pending" and "Rejected"
+     * This field is required and should not contain a null or an empty character ("")
+     * **/
     @NotBlank(message = "status is required")
     private String status;
 }

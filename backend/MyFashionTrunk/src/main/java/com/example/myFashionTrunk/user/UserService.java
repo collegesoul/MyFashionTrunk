@@ -6,11 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Service class for user-related operations
+ * **/
 @Service
 public class UserService {
     private final UserRepository userRepo;
@@ -19,6 +21,13 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Constructor for UserService
+     * @param userRepo repository for user entities
+     * @param passwordEncoder bean that uses BCrypt for hashing
+     * @param CategoryRepo repository for category entities
+     * @param listingRepo repository for listing entities
+     * **/
     public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder,
                        CategoryRepository CategoryRepo, ListingRepository listingRepo) {
         this.userRepo = userRepo;
@@ -27,6 +36,11 @@ public class UserService {
         this.listingRepo = listingRepo;
     }
 
+    /**
+     * Creates a new user
+     * @param userRequest the request object containing user details
+     * @return ResponseEntity containing the user entity or an error message
+     * **/
     public ResponseEntity<?> createUser(UserRequest userRequest) {
         Map<String, String> errors = checkIfEmpty(userRequest, "register");
         if (!errors.isEmpty()){
@@ -69,6 +83,11 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
+    /**
+     * Authenticate user based on provided credentials
+     * @param userRequest the user credentials for authentication
+     * @return ResponseEntity Contains a user entity or an error message
+     * **/
     public ResponseEntity<?> authenticateUser(UserRequest userRequest) {
         var errors = checkIfEmpty(userRequest, "login");
         if(!errors.isEmpty()) {
@@ -98,7 +117,13 @@ public class UserService {
         return ResponseEntity.ok(userResponse);
     }
 
+    /**
+     * Updates existing user credentials
+     * @param userRequest the user details for updating
+     * @return ResponseEntity Contains a user result or an error message
+     * **/
     public ResponseEntity<?> updateUser(UserRequest userRequest) {
+        //validate userRequest object
         Map<String, String> errors = checkIfEmpty(userRequest, "update");
         if(!errors.isEmpty()) {
             return ResponseEntity.badRequest().body(errors);
@@ -118,7 +143,7 @@ public class UserService {
                             "field", "email"
                     ));
         }
-
+        //create user and copy values from userRequest object to user entity
         User user = existingUser.get();
 
         if(!user.getName().equals(userRequest.getName())) {
@@ -145,6 +170,7 @@ public class UserService {
                                 "field", "password"
                         ));
             }
+            //hash the provided password and set it the user entity
             String hashedPassword = passwordEncoder.encode(userRequest.getPassword());
             userRequest.setPassword(hashedPassword);
         }
@@ -152,12 +178,22 @@ public class UserService {
         return ResponseEntity.ok(user);
     }
 
+    /**
+     * Deletes user based on their userId
+     * @param userId the user id
+     * **/
     public void deleteUser(Integer userId) {
         listingRepo.deleteAllByUserId(userId);
         CategoryRepo.deleteAllByUserId(userId);
         userRepo.deleteById(userId);
     }
 
+    /**
+     * Checks if any required field in the UserRequest object is empty
+     * @param userRequest the request object containing user details
+     * @param action the action to be performed (e.g. login, register...)
+     * @return a map errors if any required fields are empty
+     * **/
     private Map<String, String> checkIfEmpty(UserRequest userRequest, String action) {
         Map<String, String> errors = new HashMap<>();
         switch (action) {
@@ -199,10 +235,22 @@ public class UserService {
     }
 
 
+    /**
+     * Checks if the provided password matches the user's stored password
+     * @param user the user object
+     * @param plainPassword the plain text password to check
+     * @return true if password matches else false
+     * **/
     private boolean checkPassword(User user, String plainPassword) {
         return passwordEncoder.matches(plainPassword, user.getPassword());
     }
 
+    /**
+     * Checks if the provided password meets required criteria
+     * the criteria is at least one uppercase, one lowercase and one digit
+     * @param plainPassword the plain text password to validate
+     * @return true if password meets criteria else false
+     * **/
     private boolean isPasswordValid(String plainPassword) {
         String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$";
         return plainPassword.matches(regex);

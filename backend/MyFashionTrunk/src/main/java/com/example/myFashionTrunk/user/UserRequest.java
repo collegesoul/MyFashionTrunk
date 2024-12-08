@@ -7,6 +7,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * request object of user gotten from the client
+ * **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

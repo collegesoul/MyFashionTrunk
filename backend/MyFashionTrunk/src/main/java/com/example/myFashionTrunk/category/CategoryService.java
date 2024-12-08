@@ -10,18 +10,33 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Service class for category-related operations
+ */
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepo;
     private final ListingRepository listingRepo;
     private final UserRepository userRepo;
 
+    /**
+     * Constructor for CategoryService
+     * @param categoryRepo repository for category entities
+     * @param listingRepo repository for listing entities
+     * @param userRepo repository for user entities
+     * **/
     public CategoryService(CategoryRepository categoryRepo, ListingRepository listingRepo, UserRepository userRepo) {
         this.categoryRepo = categoryRepo;
         this.listingRepo = listingRepo;
         this.userRepo = userRepo;
     }
 
+    /**
+     * Deletes a category by its id
+     * if the category as associated listing it can't be deleted
+     * @param categoryId the id of category to delete
+     * @return ResponseEntity containing an error
+     * **/
     public ResponseEntity<?> deleteCategory(Integer categoryId) {
         long listingCount = listingRepo.CountByCategoryId(categoryId);
         if (listingCount > 0) {
@@ -33,6 +48,11 @@ public class CategoryService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    /**
+     * Adds a new Category
+     * @param categoryRequest the request object containing details of category to add
+     * @return Category added
+     * **/
     public Category addCategory(CategoryRequest categoryRequest) {
         Category category = new Category();
         category.setName(categoryRequest.getName());

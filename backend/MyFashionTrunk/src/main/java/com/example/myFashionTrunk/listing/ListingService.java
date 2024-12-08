@@ -9,11 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
+
+/**
+ * Service class for listing-related operations
+ * **/
 @Service
 public class ListingService {
     private final ListingRepository listingRepo;
@@ -21,8 +24,16 @@ public class ListingService {
     private final ImageDetectionService imgDetection;
     private final ImageStorageService imgStorage;
 
+
     private final String bucketName = "my_fashion_trunk_bucket";
 
+    /**
+     * Constructor for ListingService
+     * @param listingRepo repository for listing entities
+     * @param userRepo repository for user entities
+     * @param imgDetection service for image detection
+     * @param imgStorage service for image storage
+     * **/
     public ListingService(ListingRepository listingRepo,UserRepository userRepo
             ,ImageDetectionService imgDetection, ImageStorageService imgStorage) {
         this.listingRepo = listingRepo;
@@ -31,6 +42,11 @@ public class ListingService {
         this.imgStorage = imgStorage;
     }
 
+    /**
+     * Retrieves all Listings associated to a specific user
+     * @param userId the user id of specified user
+     * @return a List of ListingResponse object
+     * **/
     public List<ListingResponse> getAllListingsByUserId(Integer userId) {
         List<ListingResponse> userListings = new ArrayList<>();
         for(Listing listing : listingRepo.findAllByUserId(userId)) {
@@ -51,15 +67,22 @@ public class ListingService {
         return userListings;
     }
 
+    /**
+     * Creates a new listing
+     * @param title the title of the listing
+     * @param userId the id of user creating the list
+     * @param image the image file of the listing
+     * @return ResponseEntity containing an error message or a successful creation message
+     * **/
     public ResponseEntity<?> createListing(String title, Integer userId, MultipartFile image) {
         if (title.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of(
                     "error", "Title cannot be empty",
                     "field", "title"
             ));
-        } else if (title.length() > 60){
+        } else if (title.length() > 60 || title.length() < 3){
             return ResponseEntity.badRequest().body(Map.of(
-                    "error", "Title should not be more than 60 characters",
+                    "error", "Title should not be between 3 and 60 characters",
                     "field", "title"
             ));
         }
@@ -133,6 +156,11 @@ public class ListingService {
         ));
     }
 
+    /**
+     * Deletes a listing by its id
+     * @param id the id of listing to delete
+     * @return ResponseEntity containing an error or successful delete
+     * **/
     public ResponseEntity<?> deleteListing(Integer id) {
         Optional<Listing> existingListing = listingRepo.findById(id);
         if (existingListing.isEmpty()) {
