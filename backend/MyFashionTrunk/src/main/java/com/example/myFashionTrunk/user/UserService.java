@@ -2,13 +2,15 @@ package com.example.myFashionTrunk.user;
 
 import com.example.myFashionTrunk.category.CategoryRepository;
 import com.example.myFashionTrunk.listing.ListingRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ValidationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.security.sasl.AuthenticationException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -26,10 +28,31 @@ public class UserService {
         this.listingRepo = listingRepo;
     }
 
-    public User createUser(UserRequest userRequest) {
+    public ResponseEntity<?> createUser(UserRequest userRequest) {
+        Map<String, String> errors = checkIfEmpty(userRequest, "register");
+        if (!errors.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
         User newUser = new User();
         if(userRepo.existsByEmail(userRequest.getEmail())) {
-            throw new ValidationException("email address already in use");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                            "error", "Email address already in use",
+                            "field", "email"
+                    ));
+        }
+        if(userRequest.getPassword().length() < 8) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                            "error", "Password must be at least 8 characters",
+                            "field", "password"
+                    ));
+        } else if(!isPasswordValid(userRequest.getPassword())){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                            "error", "Password must contain at least one Uppercase letter, one Lowercase letter and one digit",
+                            "field", "password"
+                    ));
         }
         String hashedPassword = passwordEncoder.encode(userRequest.getPassword());
         newUser.setName(userRequest.getName());
@@ -38,36 +61,96 @@ public class UserService {
         newUser.setPassword(hashedPassword);
 
         userRepo.save(newUser);
-        return newUser;
+        UserResponse userResponse = new UserResponse(
+                newUser.getId(),
+                newUser.getName(),
+                newUser.getSurname(),
+                newUser.getEmail()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
-    public User authenticateUser(UserRequest userRequest) throws AuthenticationException {
-       User existingUser = userRepo.findByEmail(userRequest.getEmail())
-               .orElseThrow(() -> new EntityNotFoundException("email address does not exist"));
-
-        if(checkPassword(existingUser, userRequest.getPassword())) {
-            throw new AuthenticationException("password does not match");
+    public ResponseEntity<?> authenticateUser(UserRequest userRequest) {
+        var errors = checkIfEmpty(userRequest, "login");
+        if(!errors.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
         }
-        return existingUser;
+       Optional<User> existingUser = userRepo.findByEmail(userRequest.getEmail());
+       if(existingUser.isEmpty()) {
+           return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                   .body(Map.of(
+                           "error", "Invalid username or password"
+                   ));
+       }
+       User user = existingUser.get();
+
+        if(!checkPassword(user, userRequest.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(
+                            "error", "Invalid username or password"
+                    ));
+        }
+        UserResponse userResponse = new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getSurname(),
+                user.getEmail()
+        );
+        return ResponseEntity.ok(userResponse);
     }
 
-    public User updateUser(UserRequest userRequest) {
-        User existingUser = userRepo.findById(userRequest.getId()).orElseThrow(() ->new EntityNotFoundException("user does not exist"));
-        if(!existingUser.getName().equals(userRequest.getName())) {
-            existingUser.setName(userRequest.getName());
+    public ResponseEntity<?> updateUser(UserRequest userRequest) {
+        Map<String, String> errors = checkIfEmpty(userRequest, "update");
+        if(!errors.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
         }
-        if(!existingUser.getSurname().equals(userRequest.getSurname())) {
-            existingUser.setSurname(userRequest.getSurname());
+        Optional<User> existingUser = userRepo.findById(userRequest.getId());
+
+        if(existingUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(
+                            "error", "User not found"
+                    ));
         }
-        if(!existingUser.getEmail().equals(userRequest.getEmail())) {
-            existingUser.setEmail(userRequest.getEmail());
+        if(userRepo.existsByEmail(userRequest.getEmail()) && !userRequest.getEmail().equals(existingUser.get().getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                            "error", "Email address already in use",
+                            "field", "email"
+                    ));
         }
-        if (!Objects.equals(userRequest.getPassword(), "") && !Objects.equals(userRequest.getPassword(), existingUser.getPassword())) {
+
+        User user = existingUser.get();
+
+        if(!user.getName().equals(userRequest.getName())) {
+            user.setName(userRequest.getName());
+        }
+        if(!user.getSurname().equals(userRequest.getSurname())) {
+            user.setSurname(userRequest.getSurname());
+        }
+        if(!user.getEmail().equals(userRequest.getEmail())) {
+            user.setEmail(userRequest.getEmail());
+        }
+        if (!Objects.equals(userRequest.getPassword(), "")) {
+            if(userRequest.getPassword().length() < 8) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of(
+                                "error", "Password must be at least 8 characters",
+                                "field", "password"
+                        ));
+            } else if(!isPasswordValid(userRequest.getPassword())){
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of(
+                                "error", "Password must contain at least one Uppercase letter, " +
+                                        "one Lowercase letter and one digit",
+                                "field", "password"
+                        ));
+            }
             String hashedPassword = passwordEncoder.encode(userRequest.getPassword());
             userRequest.setPassword(hashedPassword);
         }
-        userRepo.save(existingUser);
-        return existingUser;
+        userRepo.save(user);
+        return ResponseEntity.ok(user);
     }
 
     public void deleteUser(Integer userId) {
@@ -76,8 +159,53 @@ public class UserService {
         userRepo.deleteById(userId);
     }
 
+    private Map<String, String> checkIfEmpty(UserRequest userRequest, String action) {
+        Map<String, String> errors = new HashMap<>();
+        switch (action) {
+            case "login" -> {
+                if (userRequest.getEmail().isEmpty()) {
+                    errors.put("email", "Email is required");
+                }
+                if (userRequest.getPassword().isEmpty()) {
+                    errors.put("password", "Password is required");
+                }
+            }
+            case "register" -> {
+                if (userRequest.getName().isEmpty()) {
+                    errors.put("name", "Name is required");
+                }
+                if (userRequest.getSurname().isEmpty()) {
+                    errors.put("surname", "Surname is required");
+                }
+                if (userRequest.getEmail().isEmpty()) {
+                    errors.put("email", "Email is required");
+                }
+                if (userRequest.getPassword().isEmpty()) {
+                    errors.put("password", "Password is required");
+                }
+            }
+            case "update" -> {
+                if (userRequest.getName().isEmpty()) {
+                    errors.put("name", "Name is required");
+                }
+                if (userRequest.getSurname().isEmpty()) {
+                    errors.put("surname", "Surname is required");
+                }
+                if (userRequest.getEmail().isEmpty()) {
+                    errors.put("email", "Email is required");
+                }
+            }
+        }
+        return errors;
+    }
+
 
     private boolean checkPassword(User user, String plainPassword) {
         return passwordEncoder.matches(plainPassword, user.getPassword());
+    }
+
+    private boolean isPasswordValid(String plainPassword) {
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$";
+        return plainPassword.matches(regex);
     }
 }

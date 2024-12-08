@@ -64,7 +64,7 @@ function Upload() {
                 <form onSubmit={handleSubmitForm}>
                     <div>
                         <label className="form-label">Title:</label>
-                        <input className="form-input w-10/12 lg:w-7/12 placeholder:italic"
+                        <input className="form-input w-10/12 lg:w-7/12 focus:outline-gray-400"
                                name="name" type="text"
                                placeholder="Name of Listing"
                                value={title}

@@ -2,20 +2,18 @@ import Button from "./Elements/Button.jsx";
 import {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router";
-import Login from "./Login.jsx";
 
 function Profile() {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
-
-    if (!user) {
-        return(
-            <Login/>
-        );
-    }
-
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [formData, setFormData] = useState({...user});
+    const [validationErrors, setValidationErrors] = useState({});
+    const [formData, setFormData] = useState({
+        id: user.id,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        password: "",
+    });
 
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value})
@@ -28,6 +26,10 @@ function Profile() {
             const response = await axios.put("http://localhost:8080/api/v1/user", formData);
             localStorage.setItem('user', JSON.stringify(response.data));
         } catch (error) {
+            if (error.response && (error.response.status === 401
+                || error.response.status === 400 || error.response.status === 409)) {
+                setValidationErrors(error.response.data);
+            }
             console.log(error);
         }
 
@@ -58,38 +60,70 @@ function Profile() {
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label className="form-label">Name:</label>
-                        <input className="form-input w-7/12 lg:w-4/12"
+                        <input
+                            className={validationErrors?.error || validationErrors?.name
+                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                : "form-input w-7/12 lg:w-4/12 text-gray-600 focus:outline-gray-400 border-gray-300"}
                                name="name"
                                type="text"
                                value={formData.name}
                                onChange={handleChange}
                         />
+                        {validationErrors && validationErrors?.field === "name" && (
+                            <p className="text-red-600 text-sm font-semibold">{validationErrors.error}</p>
+                        ) || validationErrors && validationErrors?.name &&(
+                            <p className="text-red-600 text-sm font-semibold">{validationErrors.name}</p>
+                        )}
                     </div>
                     <div className="mt-4">
                         <label className="form-label">Surname:</label>
-                        <input className="form-input w-7/12 lg:w-4/12"
+                        <input
+                            className={validationErrors?.error || validationErrors?.surname
+                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                : "form-input w-7/12 lg:w-4/12 text-gray-600 focus:outline-gray-400 border-gray-300"}
                                name="surname"
                                type="text"
                                value={formData.surname}
                                onChange={handleChange}
                         />
+                        {validationErrors && validationErrors?.field === "surname" && (
+                            <p className="text-red-600 text-sm font-semibold">{validationErrors.error}</p>
+                        ) || validationErrors && validationErrors?.name &&(
+                            <p className="text-red-600 text-sm font-semibold">{validationErrors.surname}</p>
+                        )}
                     </div>
                     <div className="mt-4">
                         <label className="form-label">Email:</label>
-                        <input className="form-input w-7/12 lg:w-4/12"
+                        <input
+                            className={validationErrors?.error || validationErrors?.email
+                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                : "form-input w-7/12 lg:w-4/12 text-gray-600 focus:outline-gray-400 border-gray-300"}
                                name="email"
                                type="email"
                                value={formData.email}
                                onChange={handleChange}
                         />
+                        {validationErrors && validationErrors?.field === "email" && (
+                            <p className="text-red-600 text-sm font-semibold">{validationErrors.error}</p>
+                        ) || validationErrors && validationErrors?.email &&(
+                            <p className="text-red-600 text-sm font-semibold">{validationErrors.email}</p>
+                        )}
                     </div>
                     <div className="mt-4">
                         <label className="form-label">Change Password:</label>
-                        <input className="form-input w-7/12 lg:w-4/12"
+                        <input
+                            className={validationErrors?.error || validationErrors?.password
+                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                : "form-input w-7/12 lg:w-4/12 text-gray-600 focus:outline-gray-400 border-gray-300"}
                                name="password"
                                type="password"
                                onChange={handleChange}
                         />
+                        {validationErrors && validationErrors?.field === "password" && (
+                            <p className="text-red-600 text-sm font-semibold">{validationErrors.error}</p>
+                        ) || validationErrors && validationErrors?.name &&(
+                            <p className="text-red-600 text-sm font-semibold">{validationErrors.password}</p>
+                        )}
                     </div>
                     <div className="mt-6">
                         <Button text="Update Profile"

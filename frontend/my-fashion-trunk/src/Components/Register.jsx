@@ -19,7 +19,7 @@ function Register() {
         email: "",
         password: "",
     });
-
+    const [validationErrors, setValidationErrors] = useState({});
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -36,7 +36,10 @@ function Register() {
             localStorage.setItem('user', JSON.stringify(response.data));
             navigate("/");
         } catch (error) {
-            console.error("Error during registration:", error);
+            if (error.response && (error.response.status === 409 || error.response.status === 400)) {
+                setValidationErrors(error.response.data);
+            }
+            console.error(error);
         }
     };
 
@@ -54,46 +57,74 @@ function Register() {
                         <div className="mt-4">
                             <label className="form-label">Name</label>
                             <input
-                                className="form-input w-full"
+                                className={validationErrors?.error || validationErrors?.name
+                                    ? "form-input w-full border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                    : "form-input w-full text-gray-600 focus:outline-gray-400 border-gray-300"}
                                 name="name"
                                 type="text"
                                 placeholder="Enter name"
                                 value={formData.name}
                                 onChange={handleChange}
                             />
+                            {validationErrors && validationErrors?.field === "name" && (
+                                <p className="text-red-600 text-sm font-semibold">{validationErrors.error}</p>
+                            ) || validationErrors && validationErrors?.name &&(
+                                <p className="text-red-600 text-sm font-semibold">{validationErrors.name}</p>
+                            )}
                         </div>
                         <div className="mt-4">
                             <label className="form-label">Surname</label>
                             <input
-                                className="form-input w-full"
+                                className={validationErrors?.error || validationErrors?.surname
+                                    ? "form-input w-full border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                    : "form-input w-full text-gray-600 focus:outline-gray-400 border-gray-300"}
                                 name="surname"
                                 type="text"
                                 placeholder="Enter surname"
                                 value={formData.surname}
                                 onChange={handleChange}
                             />
+                            {validationErrors && validationErrors?.field === "surname" && (
+                                <p className="text-red-600 text-sm font-semibold">{validationErrors.error}</p>
+                            ) || validationErrors && validationErrors?.surname &&(
+                                <p className="text-red-600 text-sm font-semibold">{validationErrors.surname}</p>
+                            )}
                         </div>
                         <div className="mt-4">
                             <label className="form-label">Email Address</label>
                             <input
-                                className="form-input w-full"
+                                className={validationErrors?.error || validationErrors?.email
+                                    ? "form-input w-full border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                    : "form-input w-full text-gray-600 focus:outline-gray-400 border-gray-300"}
                                 name="email"
                                 type="email"
                                 placeholder="Enter email"
                                 value={formData.email}
                                 onChange={handleChange}
                             />
+                            {validationErrors && validationErrors?.field === "email" && (
+                                <p className="text-red-600 text-sm font-semibold">{validationErrors.error}</p>
+                            ) || validationErrors && validationErrors?.email &&(
+                                <p className="text-red-600 text-sm font-semibold">{validationErrors.email}</p>
+                            )}
                         </div>
                         <div className="mt-4">
                             <label className="form-label">Password</label>
                             <input
-                                className="form-input w-full"
+                                className={validationErrors?.error || validationErrors?.password
+                                    ? "form-input w-full border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                    : "form-input w-full text-gray-600 focus:outline-gray-400 border-gray-300"}
                                 name="password"
                                 type="password"
                                 placeholder="Enter password"
                                 value={formData.password}
                                 onChange={handleChange}
                             />
+                            {validationErrors && validationErrors?.field === "password" && (
+                                <p className="text-red-600 text-sm font-semibold">{validationErrors.error}</p>
+                            ) || validationErrors && validationErrors?.password &&(
+                                <p className="text-red-600 text-sm font-semibold">{validationErrors.password}</p>
+                            )}
                         </div>
                         <div className="mt-6 text-center">
                             <Button

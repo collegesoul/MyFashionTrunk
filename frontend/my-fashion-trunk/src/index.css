@@ -27,5 +27,5 @@
 }
 
 .form-input {
-    @apply block border-2 rounded p-1 text-gray-600 mt-1
+    @apply block border-2 rounded p-1 placeholder:italic mt-1
 }
