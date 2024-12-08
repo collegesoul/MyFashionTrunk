@@ -17,7 +17,9 @@ function MyListings() {
         />
     </svg>
     const user = JSON.parse(localStorage.getItem("user"));
+    const [selectedValue, setSelectedValue] = useState("");
     const filterRef = useRef(null);
+    const buttonRef = useRef(null);
     const [isDropDownVisible, setIsDropDownVisible] = useState(false);
     const [listings, setListings] = useState(()=>{
         const savedListings = localStorage.getItem("listings");
@@ -38,20 +40,44 @@ function MyListings() {
         fetchData();
     }, [user?.id])
 
+    const toggleFilter = () => {
+        setIsDropDownVisible((prev)=>!prev);
 
-    const handleClickOutside = (e) =>{
-        if (filterRef.current && !filterRef.current.contains(e.target)) {
-            setIsDropDownVisible(false);
-        }
     }
 
-    const toggleFilter = () => {
-        setIsDropDownVisible(!isDropDownVisible);
-        if (isDropDownVisible) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                filterRef.current && !filterRef.current.contains(event.target) &&
+                buttonRef.current && !buttonRef.current.contains(event.target)
+            ) {
+                setIsDropDownVisible(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    useEffect(()=>{
+        const listingsFromCache = JSON.parse(localStorage.getItem("listings"));
+        if(selectedValue === "accepted") {
+            setListings(listingsFromCache.filter((item)=>item.status === "Accepted"));
+        } else if(selectedValue === "rejected") {
+            setListings(listingsFromCache.filter((item)=>item.status === "Rejected"));
+        }else {
+            setListings(listingsFromCache);
         }
+    },[selectedValue])
+
+    const onCheck = (value)=>{
+        setSelectedValue(value);
+    }
+
+    const onReset = ()=>{
+        setSelectedValue("");
     }
 
     const handleOnDelete = async (index) => {
@@ -66,18 +92,17 @@ function MyListings() {
        }
     }
 
-
     return (
         <>
             <div className="flex justify-between items-center">
                 <h1 className="heading">My Listings</h1>
                 <span className="flex gap-x-5 items-center">
-                    <span onClick={toggleFilter}
+                    <button ref={buttonRef} onClick={toggleFilter}
                           className="flex items-center gap-x-1 cursor-pointer border-2
                           border-gray-500 py-2 px-4 hover:bg-gray-200 hover:border-gray-200">
                         {funnel}
                         Filter
-                    </span>
+                    </button>
                     <Link to="/create-new-listing">
                         <Button
                             text="Upload"
@@ -88,7 +113,7 @@ function MyListings() {
             </div>
             {isDropDownVisible && (
                 <div ref={filterRef} className="relative">
-                    <FilterDropDown/>
+                    <FilterDropDown selected={selectedValue} onCheck={onCheck} onReset={onReset}/>
                 </div>
             )}
             <div className="mt-7">

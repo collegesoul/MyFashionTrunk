@@ -25,29 +25,33 @@ function Navigation() {
 
     const user = JSON.parse(localStorage.getItem("user"));
     const isVisibleRef = useRef(null);
+    const buttonRef = useRef(null);
     const location = useLocation();
     const [isDropDownVisible, setIsDropDownVisible] = useState(false);
 
-    const handleClickOutside = (e) =>{
-        if (isVisibleRef.current && !isVisibleRef.current.contains(e.target)) {
-            setIsDropDownVisible(false);
-        }
-    }
-
     const toggleUserDropDown = () => {
-        setIsDropDownVisible(!isDropDownVisible);
-        if (isDropDownVisible) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
+        setIsDropDownVisible((prev)=>!prev);
     };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                isVisibleRef.current && !isVisibleRef.current.contains(event.target) &&
+                buttonRef.current && !buttonRef.current.contains(event.target)
+            ) {
+                setIsDropDownVisible(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     useEffect(()=>{
         setIsDropDownVisible(false);
     }, [location]);
-
-
 
     return (
         <>
@@ -77,7 +81,7 @@ function Navigation() {
                             </NavLink>
                         </li>
                     </ul>
-                    <div className="flex gap-x-2 items-center cursor-pointer relative" onClick={toggleUserDropDown}>
+                    <div ref={buttonRef} className="flex gap-x-2 items-center cursor-pointer relative" onClick={toggleUserDropDown}>
                         <span className="bg-gray-600 rounded-full w-6 h-6"></span>
                         <span className="text-gray-700 lg:inline hidden">{user?.name || "Guest"}</span>
                         <span>{arrow}</span>
