@@ -12,6 +12,7 @@ function Categories() {
     const [categoryType, setCategoryType] = useState("");
     const [customCategory, setCustomCategory] = useState("");
     const [deletedCategoryId, setDeletedCategoryId] = useState(null);
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -47,7 +48,12 @@ function Categories() {
             setCustomCategory("");
             setCategoryType("");
         } catch (error) {
-            console.error("Error adding category:", error);
+            if (error.response && error.response.status === 400) {
+                setErrors(error.response.data);
+            }
+            console.error(error);
+            //TODO: Delete This later
+            console.log(errors);
         }
     };
 
@@ -89,7 +95,7 @@ function Categories() {
             <hr className="my-4 lg:w-8/12" />
             <form onSubmit={handleAddCategory} className="flex">
                 <input
-                    className="p-2 border-2 rounded-l w-7/12"
+                    className="p-2 border-2 rounded-l w-7/12 placeholder:italic"
                     type="text"
                     placeholder="Add New Category"
                     value={customCategory}

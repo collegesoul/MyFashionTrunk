@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -73,7 +72,7 @@ public class UserService {
     public ResponseEntity<?> authenticateUser(UserRequest userRequest) {
         var errors = checkIfEmpty(userRequest, "login");
         if(!errors.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+            return ResponseEntity.badRequest().body(errors);
         }
        Optional<User> existingUser = userRepo.findByEmail(userRequest.getEmail());
        if(existingUser.isEmpty()) {
@@ -102,12 +101,12 @@ public class UserService {
     public ResponseEntity<?> updateUser(UserRequest userRequest) {
         Map<String, String> errors = checkIfEmpty(userRequest, "update");
         if(!errors.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+            return ResponseEntity.badRequest().body(errors);
         }
         Optional<User> existingUser = userRepo.findById(userRequest.getId());
 
         if(existingUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of(
                             "error", "User not found"
                     ));
@@ -131,7 +130,7 @@ public class UserService {
         if(!user.getEmail().equals(userRequest.getEmail())) {
             user.setEmail(userRequest.getEmail());
         }
-        if (!Objects.equals(userRequest.getPassword(), "")) {
+        if (!userRequest.getPassword().isEmpty()) {
             if(userRequest.getPassword().length() < 8) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(Map.of(

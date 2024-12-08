@@ -12,6 +12,7 @@ function Upload() {
     const user = JSON.parse(localStorage.getItem("user"));
     const [title, setTitle] = useState("");
     const [image, setImage] = useState(null);
+    const [validationErrors, setValidationErrors] = useState({});
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
@@ -23,9 +24,6 @@ function Upload() {
 
     const handleSubmitForm = async (e) => {
         e.preventDefault();
-        if (!image) {
-            alert("Please select a image before submitting");
-        }
         const formData = new FormData();
         formData.append("title", title);
         formData.append("image", image);
@@ -46,7 +44,26 @@ function Upload() {
             );
             navigate("/");
         } catch (error) {
-            console.error("Error uploading image:", error);
+            if (error.response && (error.response.status === 404 || error.response.status === 400)) {
+                if(error.response.data.message) {
+                    if (title === "") {
+                        setValidationErrors({
+                            "image": "Image file is required",
+                            "field": "file",
+                            "title": "Title is required",
+                        });
+                    } else {
+                        setValidationErrors({
+                            "image": "Image file is required",
+                            "field": "file"
+                        });
+                    }
+
+                } else {
+                    setValidationErrors(error.response.data);
+                }
+            }
+            console.error(error);
         }
     }
 
@@ -64,21 +81,30 @@ function Upload() {
                 <form onSubmit={handleSubmitForm}>
                     <div>
                         <label className="form-label">Title:</label>
-                        <input className="form-input w-10/12 lg:w-7/12 focus:outline-gray-400"
+                        <input
+                            className={validationErrors?.error || validationErrors?.title
+                                ? "form-input w-10/12 lg:w-7/12 border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                : "form-input w-10/12 lg:w-7/12 text-gray-600 focus:outline-gray-400 border-gray-300"}
                                name="name" type="text"
                                placeholder="Name of Listing"
                                value={title}
                                onChange={handleTitleChange}
                         />
+                        {validationErrors && (validationErrors?.field === "title" || validationErrors?.title ) && (
+                            <p className="text-red-600 text-sm font-semibold">{validationErrors.error || validationErrors.title }</p>
+                        )}
                     </div>
                     <div className="mt-8">
                         <label className="form-label">Upload image:</label>
                         <input className="w-10/12 lg:w-7/12 block border-2 rounded text-gray-600 cursor-pointer
-                        placeholder:italic file:bg-gray-500 file:border-0 file:rounded file:p-1.5
-                        file:text-md file:m-1 file:cursor-pointer file:font-medium file:text-white"
+                        italic file:bg-gray-500 file:border-0 file:rounded file:p-1.5
+                        file:text-md file:m-1 file:cursor-pointer file:font-medium file:text-white file:not-italic"
                                name="file" type="file"
                                onChange={handleFileChange}
                         />
+                        {validationErrors && validationErrors?.field === "file" && (
+                            <p className="text-red-600 text-sm font-semibold">{validationErrors.image || validationErrors.error }</p>
+                        )}
                     </div>
                     <div className="mt-10">
                         <Button

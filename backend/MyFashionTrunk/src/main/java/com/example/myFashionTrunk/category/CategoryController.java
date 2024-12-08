@@ -2,6 +2,7 @@ package com.example.myFashionTrunk.category;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,9 +30,8 @@ public class CategoryController {
         return categoryService.addCategory(categoryRequest);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    void deleteCategory(@PathVariable int id) {
-        categoryService.deleteCategory(id);
+    ResponseEntity<?> deleteCategory(@PathVariable int id)  {
+        return categoryService.deleteCategory(id);
     }
 }
