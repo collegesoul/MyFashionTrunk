@@ -4,6 +4,10 @@ import Login from "./Login.jsx";
 import {useState} from "react";
 import axios from "axios";
 
+/**
+ * A component for user registration
+ * @returns {JSX.Element} a rendered Register component
+ * **/
 function Register() {
     const briefcaseIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                className="size-7">
@@ -22,6 +26,10 @@ function Register() {
     const [validationErrors, setValidationErrors] = useState({});
     const navigate = useNavigate();
 
+    /**
+     * handles change events for form inputs
+     * @returns {React.ChangeEvent<HTMLInputElement>} e the change event
+     * **/
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -29,6 +37,10 @@ function Register() {
         });
     };
 
+    /**
+     * handles form submission for registering a user
+     * @returns {React.ChangeEvent<HTMLFormElement>} e the form submission event
+     * **/
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {

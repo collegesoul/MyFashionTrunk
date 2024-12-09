@@ -6,6 +6,10 @@ import Categories from "./Categories.jsx";
 import Profile from "./Profile.jsx";
 import Upload from "./Upload.jsx";
 
+/**
+ * The main layout component that includes navigation and routes for different sections
+ * @returns {JSX.Element} a rendered main layout component
+ * **/
 function MainLayout() {
     return(
         <>

@@ -1,6 +1,13 @@
 import Button from "./Elements/Button.jsx";
 import PropTypes from "prop-types";
 
+/**
+ * A dropdown component for filtering listings by status
+ * @param {string} selected the currently selected filter option
+ * @param {function} onCheck the function to call when a filter option is selected
+ * @param {function} onReset the function to call when the reset button is clicked
+ * @returns {JSX.Element} the rendered filter dropdown component
+ * **/
 function FilterDropDown({selected, onCheck, onReset}) {
     return(
         <div className="modal p-3 right-28">

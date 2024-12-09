@@ -1,11 +1,15 @@
-// eslint-disable-next-line no-unused-vars
-import React, {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {NavLink, useLocation} from "react-router";
 import UserDropDown from "./UserDropDown.jsx";
 
+/**
+ * A navbar component with links to different sections, application logo and a UserDropDown component
+ * @returns {JSX.Element} the rendered navigation component
+ * **/
 function Navigation() {
     const arrow = (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-3">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+             stroke="currentColor" className="size-3">
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25L12 15.75 4.5 8.25" />
         </svg>
     );
@@ -29,10 +33,17 @@ function Navigation() {
     const location = useLocation();
     const [isDropDownVisible, setIsDropDownVisible] = useState(false);
 
+    /**
+     * toggles the visibility of the UserDropDown menu
+     * **/
     const toggleUserDropDown = () => {
         setIsDropDownVisible((prev)=>!prev);
     };
 
+    /**
+     * Adds an event listener to detect clicks outside the UserDropDown menu
+     * to hide the dropdown if visible and if clicked outside
+     * **/
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
@@ -49,6 +60,9 @@ function Navigation() {
         };
     }, []);
 
+    /**
+     * Hides UserDropDown menu when the location (route) changes
+     * **/
     useEffect(()=>{
         setIsDropDownVisible(false);
     }, [location]);
@@ -81,7 +95,8 @@ function Navigation() {
                             </NavLink>
                         </li>
                     </ul>
-                    <div ref={buttonRef} className="flex gap-x-2 items-center cursor-pointer relative" onClick={toggleUserDropDown}>
+                    <div ref={buttonRef} className="flex gap-x-2 items-center cursor-pointer relative"
+                         onClick={toggleUserDropDown}>
                         <span className="bg-gray-600 rounded-full w-6 h-6"></span>
                         <span className="text-gray-700 lg:inline hidden">{user?.name || "Guest"}</span>
                         <span>{arrow}</span>

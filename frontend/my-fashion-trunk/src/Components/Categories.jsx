@@ -4,7 +4,10 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router";
 
-
+/**
+ * A component for managing categories
+ * @returns {JSX.Element} a rendered Categories component
+ * **/
 function Categories() {
     useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
@@ -14,6 +17,9 @@ function Categories() {
     const [deletedCategoryId, setDeletedCategoryId] = useState(null);
     const [errors, setErrors] = useState({});
 
+    /**
+     * fetches categories from the server when the component mounts
+     * **/
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -26,15 +32,22 @@ function Categories() {
         fetchData();
     }, []);
 
-
     const prohibitedCategory = categories.filter((category) => category.type === "Prohibited");
     const allowedCategory = categories.filter((category) => category.type === "Allowed");
 
-
+    /**
+     * handles selection of category type
+     * **/
     const handleSelectedCategory = (e) => setCategoryType(e.target.value);
+    /**
+     * handles input change for the custom category name
+     * **/
     const handleCustomCategory = (e) => setCustomCategory(e.target.value);
 
-
+    /**
+     * handles form submission for adding a new category
+     * @returns {React.ChangeEvent<HTMLFormElement>} e the form submission event
+     * **/
     const handleAddCategory = async (e) => {
         e.preventDefault();
         const formData = {
@@ -57,19 +70,27 @@ function Categories() {
         }
     };
 
-
+    /**
+     * sets the deletedCategoryId to the id of the category to be deleted in the prohibited category list
+     * @param {number} index the index of the category to delete
+     * **/
     const deleteProhibitedCategory = (index) => {
         const categoryToDelete = prohibitedCategory[index];
         setDeletedCategoryId(categoryToDelete.id);
     };
 
-
+    /**
+     * sets the deletedCategoryId to the id of the category to be deleted in the allowed category list
+     * @param {number} index the index of the category to delete
+     * **/
     const deleteAllowedCategory = (index) => {
         const categoryToDelete = allowedCategory[index];
         setDeletedCategoryId(categoryToDelete.id);
     };
 
-
+    /**
+     * deletes the category with the specified id stored in the deletedCategoryId
+     * **/
     useEffect(() => {
         if (deletedCategoryId !== null) {
             const deleteCategory = async () => {

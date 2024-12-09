@@ -3,6 +3,10 @@ import {NavLink, useNavigate} from "react-router";
 import {useState} from "react";
 import axios from "axios";
 
+/**
+ * A component for uploading new listings
+ * @returns {JSX.Element} the rendered upload component
+ * **/
 function Upload() {
     const arrowBack = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                            stroke="currentColor" className="size-6">
@@ -14,14 +18,26 @@ function Upload() {
     const [image, setImage] = useState(null);
     const [validationErrors, setValidationErrors] = useState({});
 
+    /**
+     * handles change event for title input
+     * @param{React.ChangeEvent<HTMLInputElement>} e the change event
+     * **/
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
     }
 
+    /**
+     * handles change event for file input
+     * @param{React.ChangeEvent<HTMLInputElement>} e the change event
+     * **/
     const handleFileChange = (e) => {
         setImage(e.target.files[0]);
     }
 
+    /**
+     * handles form submission for creating a listing
+     * @param{React.ChangeEvent<HTMLFormElement>} e the form submission event
+     * **/
     const handleSubmitForm = async (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -32,6 +48,7 @@ function Upload() {
             console.log(pair[0] + ': ' + pair[1]);
         }
 
+        // Querying api to create listing
         try {
             await axios.post(
                 "http://localhost:8080/api/v1/listings",
@@ -83,7 +100,8 @@ function Upload() {
                         <label className="form-label">Title:</label>
                         <input
                             className={validationErrors?.error || validationErrors?.title
-                                ? "form-input w-10/12 lg:w-7/12 border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                ? "form-input w-10/12 lg:w-7/12 border-red-400 text-red-400 focus:outline-red-600 " +
+                                "placeholder:text-red-500"
                                 : "form-input w-10/12 lg:w-7/12 text-gray-600 focus:outline-gray-400 border-gray-300"}
                                name="name" type="text"
                                placeholder="Name of Listing"
@@ -91,7 +109,9 @@ function Upload() {
                                onChange={handleTitleChange}
                         />
                         {validationErrors && (validationErrors?.field === "title" || validationErrors?.title ) && (
-                            <p className="text-red-600 text-sm font-semibold">{validationErrors.error || validationErrors.title }</p>
+                            <p className="text-red-600 text-sm font-semibold">
+                                {validationErrors.error || validationErrors.title }
+                            </p>
                         )}
                     </div>
                     <div className="mt-8">
@@ -103,7 +123,9 @@ function Upload() {
                                onChange={handleFileChange}
                         />
                         {validationErrors && validationErrors?.field === "file" && (
-                            <p className="text-red-600 text-sm font-semibold">{validationErrors.image || validationErrors.error }</p>
+                            <p className="text-red-600 text-sm font-semibold">
+                                {validationErrors.image || validationErrors.error }
+                            </p>
                         )}
                     </div>
                     <div className="mt-10">

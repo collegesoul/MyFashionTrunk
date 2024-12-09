@@ -3,6 +3,10 @@ import Login from "./Components/Login.jsx";
 import Register from "./Components/Register.jsx";
 import MainLayout from "./Components/MainLayout.jsx";
 
+/**
+ * The main application component that handles routing
+ * @returns {JSX.Element} the rendered application component
+ * **/
 function App() {
     const user = localStorage.getItem("user");
     return(

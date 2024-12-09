@@ -1,10 +1,18 @@
 import Button from "./Elements/Button.jsx";
 import {NavLink, useNavigate} from "react-router";
 import PropTypes from "prop-types";
-
-function UserDropDown({name = "Guest"}){
+/**
+ * A dropdown component for viewing user edit profile and logout button
+ * @param {string} name the name of the user
+ * @returns {JSX.Element} the rendered user dropdown component
+ * **/
+function UserDropDown({name}){
     const navigate = useNavigate();
 
+    /**
+     * handles logout action by removing the user from local storage and navigating
+     * to the login route
+     * **/
     const handleSignOut = () => {
         localStorage.removeItem("user");
         navigate("/login");

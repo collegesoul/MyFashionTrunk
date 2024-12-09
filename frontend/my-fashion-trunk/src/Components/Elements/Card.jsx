@@ -1,5 +1,15 @@
 import PropTypes from "prop-types";
 
+/**
+ * A customizable card component for displaying a listing
+ * @param {string} title the title of the listing
+ * @param {string} status the status of the listing (Accepted, Rejected, Pending)
+ * @param {string} category the category of the listing (e.g. Shoes category)
+ * @param {string} imageUrl the url of the image to display in the img tag
+ * @param {string} imgAlt the alt text for the image
+ * @param {function} onDelete the function to be called when the delete icon is clicked
+ * @returns {JSX.Element} the rendered card component
+ * **/
 function Card({title, status, category, imageUrl, imgAlt, onDelete}) {
     const deleteIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                             className="size-5">

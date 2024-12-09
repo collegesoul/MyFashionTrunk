@@ -3,6 +3,10 @@ import {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router";
 
+/**
+ * A component for managing profile settings
+ * @returns {JSX.Element} a rendered profile component
+ * **/
 function Profile() {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
@@ -15,10 +19,18 @@ function Profile() {
         password: "",
     });
 
+    /**
+     * handles change events for form inputs
+     * @returns {React.ChangeEvent<HTMLInputElement>} e the change event
+     * **/
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value})
     }
 
+    /**
+     * handles form submission for updating user profile
+     * @returns {React.ChangeEvent<HTMLFormElement>} e the form submission event
+     * **/
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -34,12 +46,17 @@ function Profile() {
         }
 
     }
+
+    /**
+     * handles deletion of user account
+     * **/
     const handleDelete = async () => {
         if (!user || !user.id) {
             console.error("User not found!");
             return;
         }
-        const confirmDelete = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete your account? This action cannot be undone.");
         if (!confirmDelete) return;
 
         try {
@@ -62,7 +79,8 @@ function Profile() {
                         <label className="form-label">Name:</label>
                         <input
                             className={validationErrors?.error || validationErrors?.name
-                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 " +
+                                "focus:outline-red-600 placeholder:text-red-500"
                                 : "form-input w-7/12 lg:w-4/12 text-gray-600 focus:outline-gray-400 border-gray-300"}
                                name="name"
                                type="text"
@@ -79,7 +97,8 @@ function Profile() {
                         <label className="form-label">Surname:</label>
                         <input
                             className={validationErrors?.error || validationErrors?.surname
-                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 " +
+                                "focus:outline-red-600 placeholder:text-red-500"
                                 : "form-input w-7/12 lg:w-4/12 text-gray-600 focus:outline-gray-400 border-gray-300"}
                                name="surname"
                                type="text"
@@ -96,7 +115,8 @@ function Profile() {
                         <label className="form-label">Email:</label>
                         <input
                             className={validationErrors?.error || validationErrors?.email
-                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 " +
+                                "focus:outline-red-600 placeholder:text-red-500"
                                 : "form-input w-7/12 lg:w-4/12 text-gray-600 focus:outline-gray-400 border-gray-300"}
                                name="email"
                                type="email"
@@ -113,7 +133,8 @@ function Profile() {
                         <label className="form-label">Change Password:</label>
                         <input
                             className={validationErrors?.error || validationErrors?.password
-                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 focus:outline-red-600 placeholder:text-red-500"
+                                ? "form-input w-7/12 lg:w-4/12 border-red-400 text-red-400 " +
+                                "focus:outline-red-600 placeholder:text-red-500"
                                 : "form-input w-7/12 lg:w-4/12 text-gray-600 focus:outline-gray-400 border-gray-300"}
                                name="password"
                                type="password"

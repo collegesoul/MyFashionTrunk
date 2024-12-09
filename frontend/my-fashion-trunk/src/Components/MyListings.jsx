@@ -6,6 +6,10 @@ import FilterDropDown from "./FilterDropDown.jsx";
 import {Link} from "react-router";
 import axios from "axios";
 
+/**
+ * A component for displaying and managing user listings
+ * @returns {JSX.Element} a rendered MyListings component
+ * **/
 function MyListings() {
     const funnel = <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24" strokeWidth={1.5}
@@ -26,6 +30,9 @@ function MyListings() {
         return savedListings ? JSON.parse(savedListings) : [];
     });
 
+    /**
+     * fetches user listings from the server when the component mounts
+     * **/
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -40,11 +47,18 @@ function MyListings() {
         fetchData();
     }, [user?.id])
 
+    /**
+     * toggles the visibility of the FilterDropDown menu
+     * **/
     const toggleFilter = () => {
         setIsDropDownVisible((prev)=>!prev);
 
     }
 
+    /**
+     * Adds an event listener to detect clicks outside the FilterDropDown menu
+     * to hide the dropdown if visible and if clicked outside
+     * **/
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
@@ -61,6 +75,9 @@ function MyListings() {
         };
     }, []);
 
+    /**
+     * filters the listings based on the selected option ("Accepted", "Rejected")
+     * **/
     useEffect(()=>{
         const listingsFromCache = JSON.parse(localStorage.getItem("listings"));
         if(selectedValue === "accepted") {
@@ -72,14 +89,25 @@ function MyListings() {
         }
     },[selectedValue])
 
+    /**
+     * handles the selection of filter value
+     * @param {string} value the selected filter value
+     * **/
     const onCheck = (value)=>{
         setSelectedValue(value);
     }
 
+    /**
+     * resets the filter value
+     * **/
     const onReset = ()=>{
         setSelectedValue("");
     }
 
+    /**
+     * handles the deletion of a user listing
+     * @param {number} index the index of the listing to delete
+     * **/
     const handleOnDelete = async (index) => {
        try {
            const id = listings[index].id;
