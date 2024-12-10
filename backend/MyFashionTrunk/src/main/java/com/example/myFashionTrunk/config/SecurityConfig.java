@@ -45,12 +45,16 @@ public class SecurityConfig {
      * Allows CORS requests to all endpoints and the specified Http methods allowed
      * @return WebMvcConfigurer that configures CORS mapping
      * **/
-    @Bean public WebMvcConfigurer corsConfigurer() { return new WebMvcConfigurer() {
-        @Override public void addCorsMappings(CorsRegistry registry) {
+    @Bean public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+        @Override
+        public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/**")
                     .allowedOrigins(allowedOrigins)
                     .allowedMethods("GET", "POST", "PUT", "DELETE")
-                    .allowedHeaders("*") .allowCredentials(true) .maxAge(3600);
+                    .allowedHeaders("*")
+                    .allowCredentials(true)
+                    .maxAge(3600);
         }
     };
     }

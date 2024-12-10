@@ -26,20 +26,20 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) {
         if (categoryRepo.count() == 0) {
             categoryRepo.saveAll(Arrays.asList(
-                    new Category(null, null, "Fashion accessories", "Allowed"),
-                    new Category(null, null, "Clothes", "Allowed"),
-                    new Category(null, null, "Footwear", "Allowed"),
-                    new Category(null, null, "Cosmetics", "Allowed"),
-                    new Category(null, null, "Children toys", "Allowed"),
-                    new Category(null, null, "Tech accessories", "Allowed"),
-                    new Category(null, null, "Pet care products", "Allowed"),
-                    new Category(null, null, "Food products", "Prohibited"),
-                    new Category(null, null, "Sports equipment", "Prohibited"),
-                    new Category(null, null, "Tobacco products", "Prohibited"),
-                    new Category(null, null, "Cleaning supplies", "Prohibited"),
-                    new Category(null, null, "Weapon and armoury", "Prohibited"),
-                    new Category(null, null, "Vehicles and automotive parts", "Prohibited"),
-                    new Category(null, null, "Natural fur products", "Prohibited")
+                    Category.builder().name("Fashion Accessories").type("Allowed").build(),
+                    Category.builder().name("Clothes").type("Allowed").build(),
+                    Category.builder().name("Footwear").type("Allowed").build(),
+                    Category.builder().name("Cosmetics").type("Allowed").build(),
+                    Category.builder().name("Children toys").type("Allowed").build(),
+                    Category.builder().name("Tech accessories").type("Allowed").build(),
+                    Category.builder().name("Pet care products").type("Allowed").build(),
+                    Category.builder().name("Food products").type("Prohibited").build(),
+                    Category.builder().name("Sports equipment").type("Prohibited").build(),
+                    Category.builder().name("Tobacco products").type("Prohibited").build(),
+                    Category.builder().name("Cleaning supplies").type("Prohibited").build(),
+                    Category.builder().name("Weapon and armoury").type("Prohibited").build(),
+                    Category.builder().name("Vehicles and automotive parts").type("Prohibited").build(),
+                    Category.builder().name("Natural fur products").type("Prohibited").build()
             ));
         }
     }
