@@ -28,7 +28,7 @@ function Register() {
 
     /**
      * handles change events for form inputs
-     * @returns {React.ChangeEvent<HTMLInputElement>} e the change event
+     * @param {React.ChangeEvent<HTMLInputElement>} e the change event
      * **/
     const handleChange = (e) => {
         setFormData({
@@ -39,7 +39,7 @@ function Register() {
 
     /**
      * handles form submission for registering a user
-     * @returns {React.ChangeEvent<HTMLFormElement>} e the form submission event
+     * @param {React.ChangeEvent<HTMLFormElement>} e the form submission event
      * **/
     const handleSubmit = async (e) => {
         e.preventDefault();

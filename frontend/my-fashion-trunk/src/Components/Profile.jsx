@@ -2,6 +2,7 @@ import Button from "./Elements/Button.jsx";
 import {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router";
+import Notification from "./Elements/Notification.jsx";
 
 /**
  * A component for managing profile settings
@@ -18,10 +19,11 @@ function Profile() {
         email: user.email,
         password: "",
     });
+    const [storedMessage, setStoredMessage] = useState(null);
 
     /**
      * handles change events for form inputs
-     * @returns {React.ChangeEvent<HTMLInputElement>} e the change event
+     * @param {React.ChangeEvent<HTMLInputElement>} e the change event
      * **/
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value})
@@ -29,7 +31,7 @@ function Profile() {
 
     /**
      * handles form submission for updating user profile
-     * @returns {React.ChangeEvent<HTMLFormElement>} e the form submission event
+     * @param {React.ChangeEvent<HTMLFormElement>} e the form submission event
      * **/
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -37,10 +39,20 @@ function Profile() {
             console.log(formData);
             const response = await axios.put("http://localhost:8080/api/v1/user", formData);
             localStorage.setItem('user', JSON.stringify(response.data));
+            setStoredMessage({
+                "message": "Profile Edited Successfully",
+                "type": "success",
+            })
         } catch (error) {
             if (error.response && (error.response.status === 401
                 || error.response.status === 400 || error.response.status === 409)) {
                 setValidationErrors(error.response.data);
+            }
+            if (error.response && error.response.status === 404) {
+                setStoredMessage({
+                    "message": error.response.data.error,
+                    "type": "error",
+                })
             }
             console.log(error);
         }
@@ -69,6 +81,12 @@ function Profile() {
         }
     };
 
+    /**
+     * Sets storedMessage to null to stop the Notification component from rendering
+     * **/
+    const handleNotificationDelete = ()=> {
+        setStoredMessage(null);
+    }
 
     return(
         <div>
@@ -167,6 +185,11 @@ function Profile() {
                     </div>
                 </div>
             </div>
+            {storedMessage !== null && (
+                <Notification text={storedMessage?.message}
+                              onDelete={handleNotificationDelete}
+                              type={storedMessage?.type}/>
+            )}
         </div>
     );
 }

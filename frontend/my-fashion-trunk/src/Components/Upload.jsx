@@ -50,7 +50,7 @@ function Upload() {
 
         // Querying api to create listing
         try {
-            await axios.post(
+            const response = await axios.post(
                 "http://localhost:8080/api/v1/listings",
                 formData,
                 {
@@ -59,6 +59,7 @@ function Upload() {
                     },
                 }
             );
+            localStorage.setItem('message', JSON.stringify(response.data))
             navigate("/");
         } catch (error) {
             if (error.response && (error.response.status === 404 || error.response.status === 400)) {

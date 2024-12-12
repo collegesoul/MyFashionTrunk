@@ -27,7 +27,7 @@ function Login() {
 
     /**
      * handles change events for form inputs
-     * @returns {React.ChangeEvent<HTMLInputElement>} e the change event
+     * @param {React.ChangeEvent<HTMLInputElement>} e the change event
      * **/
     const handleChange = (e) => {
         setFormData({
@@ -38,13 +38,17 @@ function Login() {
 
     /**
      * handles form submission for authenticating and logging in a user
-     * @returns {React.ChangeEvent<HTMLFormElement>} e the form submission event
+     * @param {React.ChangeEvent<HTMLFormElement>} e the form submission event
      * **/
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post("http://localhost:8080/api/v1/user/login", formData);
             localStorage.setItem('user', JSON.stringify(response.data));
+            localStorage.setItem('message', JSON.stringify({
+                "message": `Welcome back ${response.data.name}!`,
+                "type": "success",
+            }));
             navigate("/");
         } catch (error) {
             if (error.response && (error.response.status === 401 || error.response.status === 400)) {

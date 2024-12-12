@@ -12,8 +12,6 @@ Google Cloud Store for storage of images, and it's connected to a PostgreSQL dat
 Home view
 ![homeView](screenshots/homeView.png)
 
-![homeView1](screenshots/homeView1.png)
-
 categories for editing categories
 ![categories1](screenshots/categories.png)
 
@@ -33,8 +31,11 @@ register page for new users
 ![register](screenshots/register.png)
 
 
-### Environment Variables needed:<br>
+### Environment variables needed on the backend:<br>
 SPRING_DATASOURCE_USERNAME<br>
 SPRING_DATASOURCE_PASSWORD<br>
 GOOGLE_APPLICATION_CREDENTIALS<br>
 GOOGLE_CLOUD_PROJECT
+
+### Environment variable needed on the frontend: <br>
+SERVER_APP_URL

@@ -3,6 +3,7 @@ import Category from "./Elements/Category.jsx";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router";
+import Notification from "./Elements/Notification.jsx";
 
 /**
  * A component for managing categories
@@ -15,7 +16,7 @@ function Categories() {
     const [categoryType, setCategoryType] = useState("");
     const [customCategory, setCustomCategory] = useState("");
     const [deletedCategoryId, setDeletedCategoryId] = useState(null);
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState(null);
 
     /**
      * fetches categories from the server when the component mounts
@@ -46,7 +47,7 @@ function Categories() {
 
     /**
      * handles form submission for adding a new category
-     * @returns {React.ChangeEvent<HTMLFormElement>} e the form submission event
+     * @param {React.ChangeEvent<HTMLFormElement>} e the form submission event
      * **/
     const handleAddCategory = async (e) => {
         e.preventDefault();
@@ -61,12 +62,13 @@ function Categories() {
             setCustomCategory("");
             setCategoryType("");
         } catch (error) {
-            if (error.response && error.response.status === 400) {
-                setErrors(error.response.data);
+            if (error.response && error.response.status === 400 || error.response.status === 409) {
+                setErrors({
+                    "message": error.response.data.error,
+                    "type": "error",
+                });
             }
             console.error(error);
-            //TODO: Delete This later
-            console.log(errors);
         }
     };
 
@@ -109,6 +111,13 @@ function Categories() {
             deleteCategory();
         }
     }, [deletedCategoryId]);
+
+    /**
+     * Sets storedMessage to null to stop the Notification component from rendering
+     * **/
+    const handleNotificationDelete = ()=> {
+        setErrors(null);
+    }
 
     return (
         <div>
@@ -179,6 +188,11 @@ function Categories() {
                     </div>
                 </div>
             </div>
+            {errors !== null && (
+                <Notification text={errors?.message}
+                              onDelete={handleNotificationDelete}
+                              type={errors?.type}/>
+            )}
         </div>
     );
 }

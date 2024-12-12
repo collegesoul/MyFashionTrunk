@@ -57,7 +57,7 @@ public class CategoryService {
         Category existingCategory = categoryRepo.findByNameIgnoreCase(categoryRequest.getName());
         if (existingCategory != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
-                    "error", "Category already exists"
+                    "error", "Category already exists!"
             ));
         }
         Optional<User> existingUser = userRepo.findById(categoryRequest.getUserId());

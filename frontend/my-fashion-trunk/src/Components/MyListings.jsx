@@ -5,6 +5,7 @@ import Card from "./Elements/Card.jsx";
 import FilterDropDown from "./FilterDropDown.jsx";
 import {Link} from "react-router";
 import axios from "axios";
+import Notification from "./Elements/Notification.jsx";
 
 /**
  * A component for displaying and managing user listings
@@ -29,6 +30,7 @@ function MyListings() {
         const savedListings = localStorage.getItem("listings");
         return savedListings ? JSON.parse(savedListings) : [];
     });
+    const [storedMessage, setStoredMessage] = useState(null);
 
     /**
      * fetches user listings from the server when the component mounts
@@ -112,13 +114,26 @@ function MyListings() {
        try {
            const id = listings[index].id;
            const url = `http://localhost:8080/api/v1/listings/${id}`;
-           await axios.delete(url);
+           const response = await axios.delete(url);
            setListings(listings.filter((item)=> item.id !== id))
            localStorage.setItem("listings", JSON.stringify(listings));
+           setStoredMessage(response.data)
        } catch (error) {
            console.log(error);
        }
     }
+
+    const handleNotificationDelete = ()=> {
+        setStoredMessage(null);
+    }
+
+    useEffect(()=>{
+        const message = JSON.parse(localStorage.getItem("message"));
+        if(message){
+            setStoredMessage(message);
+            localStorage.removeItem("message");
+        }
+    }, [])
 
     return (
         <>
@@ -164,6 +179,11 @@ function MyListings() {
                     </div>
                 )}
             </div>
+            {storedMessage !== null && (
+                <Notification text={storedMessage?.message}
+                              onDelete={handleNotificationDelete}
+                              type={storedMessage?.type}/>
+            )}
         </>
     );
 }
