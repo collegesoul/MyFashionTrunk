@@ -34,11 +34,10 @@ public class CategoryController {
     /**
      * Adds a category
      * @param categoryRequest the category details to create
-     * @return added category
+     * @return ResponseEntity with added Category or an error
      * **/
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    Category addCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
+    ResponseEntity<?> addCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
         return categoryService.addCategory(categoryRequest);
     }
 

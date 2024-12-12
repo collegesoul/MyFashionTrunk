@@ -51,19 +51,25 @@ public class CategoryService {
     /**
      * Adds a new Category
      * @param categoryRequest the request object containing details of category to add
-     * @return Category added
+     * @return ResponseEntity with added Category or an error
      * **/
-    public Category addCategory(CategoryRequest categoryRequest) {
-        Category category = new Category();
-        category.setName(categoryRequest.getName());
-        category.setType(categoryRequest.getType());
+    public ResponseEntity<?> addCategory(CategoryRequest categoryRequest) {
+        Category existingCategory = categoryRepo.findByNameIgnoreCase(categoryRequest.getName());
+        if (existingCategory != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                    "error", "Category already exists"
+            ));
+        }
         Optional<User> existingUser = userRepo.findById(categoryRequest.getUserId());
         if (existingUser.isEmpty()) {
             return null;
         }
         User user = existingUser.get();
+        Category category = new Category();
+        category.setName(categoryRequest.getName());
+        category.setType(categoryRequest.getType());
         category.setUser(user);
         categoryRepo.save(category);
-        return category;
+        return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
 }

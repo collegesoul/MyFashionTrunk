@@ -54,4 +54,10 @@ public class CategoryRepositoryTest {
                 .stream().filter(c -> c.getUser().getId().equals(userId)).toList();
         assertThat(categories).hasSize(0);
     }
+
+    @Test
+    public void whenFindByNameIgnoreCase_thenCategoryIsFound() {
+        Category category = categoryRepo.findByNameIgnoreCase("category 1");
+        assertThat(category).isNotNull();
+    }
 }

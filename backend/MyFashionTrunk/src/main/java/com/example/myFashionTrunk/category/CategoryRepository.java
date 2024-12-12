@@ -18,4 +18,10 @@ public interface CategoryRepository extends ListCrudRepository<Category, Integer
     @Transactional
     @Query("DELETE FROM Category c WHERE c.user.id = :userId ")
     void deleteAllByUserId(@Param("userId") Integer userId);
+
+    /**
+     * Retrieves a category with matched name ignoring cases
+     * @param name the name of the category
+     * **/
+    Category findByNameIgnoreCase(String name);
 }
