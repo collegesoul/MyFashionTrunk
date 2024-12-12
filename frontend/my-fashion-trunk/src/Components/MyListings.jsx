@@ -38,7 +38,7 @@ function MyListings() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const url = `http://localhost:8080/api/v1/listings/${user.id}`;
+                const url = `${import.meta.env.VITE_SERVER_APP_URL}/api/v1/listings/${user.id}`;
                 const response = await axios.get(url);
                 setListings(response.data);
                 localStorage.setItem("listings", JSON.stringify(response.data));
@@ -113,7 +113,7 @@ function MyListings() {
     const handleOnDelete = async (index) => {
        try {
            const id = listings[index].id;
-           const url = `http://localhost:8080/api/v1/listings/${id}`;
+           const url = `${import.meta.env.VITE_SERVER_APP_URL}/api/v1/listings/${id}`;
            const response = await axios.delete(url);
            setListings(listings.filter((item)=> item.id !== id))
            localStorage.setItem("listings", JSON.stringify(listings));

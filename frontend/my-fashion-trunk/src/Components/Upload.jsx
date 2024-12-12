@@ -51,7 +51,7 @@ function Upload() {
         // Querying api to create listing
         try {
             const response = await axios.post(
-                "http://localhost:8080/api/v1/listings",
+                `${import.meta.env.VITE_SERVER_APP_URL}/api/v1/listings`,
                 formData,
                 {
                     headers: {

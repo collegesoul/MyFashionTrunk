@@ -43,7 +43,8 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/api/v1/user/login", formData);
+            const response = await axios.post(
+                `${import.meta.env.VITE_SERVER_APP_URL}/api/v1/user/login`, formData);
             localStorage.setItem('user', JSON.stringify(response.data));
             localStorage.setItem('message', JSON.stringify({
                 "message": `Welcome back ${response.data.name}!`,

@@ -37,7 +37,8 @@ function Profile() {
         e.preventDefault();
         try {
             console.log(formData);
-            const response = await axios.put("http://localhost:8080/api/v1/user", formData);
+            const response = await axios.put(
+                `${import.meta.env.VITE_SERVER_APP_URL}/api/v1/user`, formData);
             localStorage.setItem('user', JSON.stringify(response.data));
             setStoredMessage({
                 "message": "Profile Edited Successfully",
@@ -72,7 +73,7 @@ function Profile() {
         if (!confirmDelete) return;
 
         try {
-            const url = `http://localhost:8080/api/v1/user/${user.id}`;
+            const url = `${import.meta.env.VITE_SERVER_APP_URL}/api/v1/user/${user.id}`;
             await axios.delete(url);
             localStorage.removeItem("user");
             navigate("/login");

@@ -44,7 +44,8 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/api/v1/user/register", formData);
+            const response = await axios.post(
+                `${import.meta.env.VITE_SERVER_APP_URL}/api/v1/user/register`, formData);
             localStorage.setItem('user', JSON.stringify(response.data));
             navigate("/");
         } catch (error) {

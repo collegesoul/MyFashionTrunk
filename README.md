@@ -38,4 +38,4 @@ GOOGLE_APPLICATION_CREDENTIALS<br>
 GOOGLE_CLOUD_PROJECT
 
 ### Environment variable needed on the frontend: <br>
-SERVER_APP_URL
+VITE_SERVER_APP_URL

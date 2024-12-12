@@ -24,7 +24,7 @@ function Categories() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:8080/api/v1/categories");
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_APP_URL}/api/v1/categories`);
                 setCategories(response.data);
             } catch (error) {
                 console.error("Error fetching categories:", error);
@@ -57,7 +57,8 @@ function Categories() {
             type: categoryType,
         };
         try {
-            const response = await axios.post("http://localhost:8080/api/v1/categories", formData);
+            const response = await axios.post(
+                `${import.meta.env.VITE_SERVER_APP_URL}/api/v1/categories`, formData);
             setCategories((prevCategories) => [...prevCategories, response.data]);
             setCustomCategory("");
             setCategoryType("");
@@ -97,7 +98,7 @@ function Categories() {
         if (deletedCategoryId !== null) {
             const deleteCategory = async () => {
                 try {
-                    const url = `http://localhost:8080/api/v1/categories/${deletedCategoryId}`;
+                    const url = `${import.meta.env.VITE_SERVER_APP_URL}/api/v1/categories/${deletedCategoryId}`;
                     await axios.delete(url);
                     setCategories((prevCategories) =>
                         prevCategories.filter((category) => category.id !== deletedCategoryId)
