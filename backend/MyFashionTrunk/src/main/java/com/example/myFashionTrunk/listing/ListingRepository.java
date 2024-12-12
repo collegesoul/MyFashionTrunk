@@ -1,5 +1,7 @@
 package com.example.myFashionTrunk.listing;
 
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -22,6 +24,8 @@ public interface ListingRepository extends ListCrudRepository<Listing, Integer> 
      * Deletes all listings associated to a specific user
      * @param userId the id of the user
      * **/
+    @Modifying
+    @Transactional
     @Query("DELETE FROM Listing l WHERE l.user.id = :userId ")
     void deleteAllByUserId(@Param("userId") Integer userId);
 
